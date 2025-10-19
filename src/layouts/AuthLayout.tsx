@@ -1,9 +1,15 @@
-import React from 'react'
-
 const AuthLayout = () => {
   return (
-    <div>AuthLayout</div>
-  )
-}
+    <div
+      className="
+        h-screen w-full
+        bg-cover bg-center
+        flex items-center justify-center
+        bg-[url('/assets/bg-auth.png')]
+      ">
+      <div className="">AuthLayout</div>
+    </div>
+  );
+};
 
-export default AuthLayout
+export default AuthLayout;

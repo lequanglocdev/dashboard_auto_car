@@ -1,4 +1,4 @@
-import { LoginForm } from '@/components/login-form';
+import { LoginForm } from "@/components/auth/login-form";
 const SignInPage = () => {
   return (
     <div className="flex min-h-screen bg-[url('src/assets/bg-auth.png')] flex-col items-center justify-center p-6 md:p-10">
@@ -7,6 +7,6 @@ const SignInPage = () => {
       </div>
     </div>
   );
-}
+};
 
-export default SignInPage
+export default SignInPage;

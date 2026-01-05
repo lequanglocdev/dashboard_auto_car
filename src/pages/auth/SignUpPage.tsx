@@ -1,8 +1,13 @@
+import { SignUpForm } from '@/components/auth/signup-form'
 import React from 'react'
 
 const SignUpPage = () => {
   return (
-    <div>SignUpPage</div>
+    <div className="flex min-h-screen bg-[url('src/assets/bg-auth.png')] flex-col items-center justify-center p-6 md:p-10">
+          <div className="w-full max-w-sm md:max-w-4xl">
+            <SignUpForm />
+          </div>
+        </div>
   )
 }
 

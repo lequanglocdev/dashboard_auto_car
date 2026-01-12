@@ -32,13 +32,19 @@ export function LoginForm({
   const [showPassword, setShowPassword] = React.useState(false);
 
   const onSubmit = async (data: LoginFormValues) => {
-    const { email, password } = data;
     try {
-      await signIn(email, password);
-      navigate("/");
+      await signIn(data.email, data.password);
+
+      const { user } = useAuthStore.getState();
+
+      if (user?.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
-      console.error("Login failed:", error);
-      toast.error("Đăng nhập thất bại. Vui lòng thử lại.");
+      toast.error("Đăng nhập thất bại");
+      console.log(error)
     }
   };
 

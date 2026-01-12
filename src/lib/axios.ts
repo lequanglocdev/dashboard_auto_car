@@ -1,61 +1,47 @@
-import { useAuthStore } from "@/store/useAuthStore";
+// lib/axios.ts
 import axios from "axios";
+import { useAuthStore } from "@/store/useAuthStore";
 
-
-
-const api = axios.create ({
- baseURL: import.meta.env.MODE === "development" ? "http://localhost:5000/api" : "/api",
+const api = axios.create({
+  baseURL:
+    import.meta.env.MODE === "development"
+      ? "http://localhost:5000/api"
+      : "/api",
   withCredentials: true,
-})
-
+});
 
 api.interceptors.request.use((config) => {
   const { accessToken } = useAuthStore.getState();
-
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
-
   return config;
 });
 
-// tự động gọi refresh api khi access token hết hạn
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalRequest = error.config;
 
-  const isAuthApi =
-    originalRequest.url?.endsWith("/auth/signin") ||
-    originalRequest.url?.endsWith("/auth/signup") ||
-    originalRequest.url?.endsWith("/auth/refresh");
-
-  if (isAuthApi) {
-    return Promise.reject(error);
-  }
-
-    originalRequest._retryCount = originalRequest._retryCount || 0;
-
-    if (error.response?.status === 403 && originalRequest._retryCount < 4) {
-      originalRequest._retryCount += 1;
-
-      try {
-        const res = await api.post("/auth/refresh", { withCredentials: true });
-        const newAccessToken = res.data.accessToken;
-
-        useAuthStore.getState().setAccessToken(newAccessToken);
-
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return api(originalRequest);
-      } catch (refreshError) {
-        useAuthStore.getState().clearState();
-        return Promise.reject(refreshError);
-      }
+    if (error.response?.status !== 403 || originalRequest._retry) {
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error);
+    originalRequest._retry = true;
+
+    try {
+      const res = await api.post("/auth/refresh");
+      const newToken = res.data.accessToken;
+
+      useAuthStore.getState().setAccessToken(newToken);
+
+      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      return api(originalRequest);
+    } catch (err) {
+      useAuthStore.getState().clearState();
+      return Promise.reject(err);
+    }
   }
 );
-
 
 export default api;

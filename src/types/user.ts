@@ -8,4 +8,5 @@ export default interface User {
   phone?: string;
   createdAt?: string;
   updatedAt?: string;
+  role: "admin" | "customer";
 }

@@ -9,6 +9,7 @@ import AdminRoute from "./components/auth/AdminRoute";
 import AdminDashboard from "./pages/dashboard/AdminDashboard";
 import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
+import Customer from "./pages/dashboard/customer/Customer";
 
 function App() {
   const { accessToken, fetchMe } = useAuthStore();
@@ -35,6 +36,7 @@ function App() {
 
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/customer" element={<Customer/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

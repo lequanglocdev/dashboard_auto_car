@@ -23,6 +23,13 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    const message =
+      error?.response?.data?.message || error.message || "Có lỗi xảy ra";
+
+    // gán lại message cho error
+    error.message = message;
+
+
     if (error.response?.status !== 403 || originalRequest._retry) {
       return Promise.reject(error);
     }

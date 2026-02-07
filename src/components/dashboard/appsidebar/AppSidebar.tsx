@@ -17,57 +17,71 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
+import { useAuthStore } from "@/store/useAuthStore";
 import {
   Calendar,
   ChevronDown,
   Home,
-  Inbox,
   Projector,
-  Search,
   Settings,
+  User,
+  Car,
+  Toolbox,
+  ClipboardList,
+  TicketPercent,
+  Receipt
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const items = [
   {
     title: "Tổng quan",
-    url: "/",
+    url: "/admin",
     icon: Home,
   },
-  {
-    title: "Quản lý nhân viên",
-    url: "#",
-    icon: Inbox,
-  },
+
   {
     title: "Quản lý khách hàng",
-    url: "#",
-    icon: Calendar,
+    url: "/customer",
+    icon: User,
   },
   {
     title: "Quản lý loại xe",
     url: "#",
-    icon: Search,
+    icon: Car,
+  },
+  {
+    title: "Quản lý dịch vụ",
+    url: "#",
+    icon: Toolbox,
   },
   {
     title: "Quản lý bảng giá",
     url: "#",
-    icon: Search,
+    icon: ClipboardList,
   },
   {
     title: "Quản lý chương trình khuyến mãi",
     url: "#",
-    icon: Settings,
+    icon: TicketPercent,
+  },
+  {
+    title: "Quản lý hóa đơn",
+    url: "#",
+    icon: Receipt,
   },
 ];
 
 const AppSidebar = () => {
+  const {user} = useAuthStore()
+  const navigate = useNavigate()
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <span>Lama Dev</span>
+              <span>{user?.username}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -79,9 +93,9 @@ const AppSidebar = () => {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton>
+                  <SidebarMenuButton onClick={() => navigate(item.url)}>
                     <item.icon className="mr-2 h-4 w-4" />
-                    <span>{item.title}</span>
+                    <h4>{item.title}</h4>
                   </SidebarMenuButton>
                   {item.title === "Inbox" && (
                     <SidebarMenuBadge>24</SidebarMenuBadge>

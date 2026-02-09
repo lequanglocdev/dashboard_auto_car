@@ -70,7 +70,7 @@ export const EditCustomer = ({ open, setOpen, customer }: EditCustomerProps) => 
           placeholder="Địa chỉ"
         />
 
-        <Button onClick={handleSubmit}>Lưu</Button>
+        <Button variant={"destructive"} onClick={handleSubmit}>Lưu</Button>
       </DialogContent>
     </Dialog>
   );

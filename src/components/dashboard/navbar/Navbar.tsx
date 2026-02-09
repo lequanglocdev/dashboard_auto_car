@@ -8,7 +8,10 @@ import { LogOut, Moon, Sun  } from "lucide-react";
 
 const Navbar = () => {
  const { setTheme } = useTheme();
- const { user } = useAuthStore()
+ const { user, signOut } = useAuthStore()
+const handleSignOut = async () => {
+  await signOut();
+}
   return (
     <div className="h-16 px-4 flex items-center justify-between bg-background border-b shrink-0">
       <SidebarTrigger />
@@ -44,7 +47,7 @@ const Navbar = () => {
           <DropdownMenuContent sideOffset={10}>
             <DropdownMenuLabel>{user?.username}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">
+            <DropdownMenuItem variant="destructive" onClick={handleSignOut}>
               <LogOut className="h-[1.2rem] w-[1.2rem] mr-2" />
               Logout
             </DropdownMenuItem>

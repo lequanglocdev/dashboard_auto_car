@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/store/useAuthStore';
-import React from 'react'
 
 const Overview = () => {
   const { signOut } = useAuthStore();

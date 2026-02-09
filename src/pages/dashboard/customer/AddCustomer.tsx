@@ -102,17 +102,19 @@ export const AddCustomer = () => {
             </Field>
           </FieldGroup>
 
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button type="button" variant="outline">
-                Hủy
-              </Button>
-            </DialogClose>
+          <div className="mt-4">
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="outline">
+                  Hủy
+                </Button>
+              </DialogClose>
 
-            <Button type="submit" variant="destructive">
-              Lưu
-            </Button>
-          </DialogFooter>
+              <Button type="submit" variant="destructive">
+                Lưu
+              </Button>
+            </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

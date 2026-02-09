@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import type Customer from "@/types/customer";
 import type { CustomerState } from "@/types/store";
 
-export const useCustomerStore = create<CustomerState>((set, get) => ({
+export const useCustomerStore = create<CustomerState>((set) => ({
   customers: [],
   loading: false,
   total: 0,
@@ -13,14 +13,18 @@ export const useCustomerStore = create<CustomerState>((set, get) => ({
   limit: 10,
   error: null,
 
-  fetchCustomers: async () => {
+  fetchCustomers: async (page = 1, limit = 10) => {
     try {
       set({ loading: true });
 
-      const data = await customerService.getAll(get().page, get().limit);
+      const data = await customerService.getAll(page, limit);
 
       set({
-        customers: Array.isArray(data) ? data : [],
+        customers: data.customers || [],
+        total: data.total || 0,
+        page,
+        limit,
+        loading: false,
       });
     } catch (error) {
       console.error(error);

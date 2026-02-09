@@ -12,7 +12,6 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
@@ -47,27 +46,27 @@ const items = [
   },
   {
     title: "Quản lý loại xe",
-    url: "#",
+    url: "/vehicle-type",
     icon: Car,
   },
   {
     title: "Quản lý dịch vụ",
-    url: "#",
+    url: "/service",
     icon: Toolbox,
   },
   {
     title: "Quản lý bảng giá",
-    url: "#",
+    url: "/price",
     icon: ClipboardList,
   },
   {
     title: "Quản lý chương trình khuyến mãi",
-    url: "#",
+    url: "/promotion",
     icon: TicketPercent,
   },
   {
     title: "Quản lý hóa đơn",
-    url: "#",
+    url: "/invoice",
     icon: Receipt,
   },
 ];
@@ -91,17 +90,24 @@ const AppSidebar = () => {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton onClick={() => navigate(item.url)}>
-                    <item.icon className="mr-2 h-4 w-4" />
-                    <h4>{item.title}</h4>
-                  </SidebarMenuButton>
-                  {item.title === "Inbox" && (
-                    <SidebarMenuBadge>24</SidebarMenuBadge>
-                  )}
-                </SidebarMenuItem>
-              ))}
+              {items.map((item) => {
+                const isActive = location.pathname === item.url;
+
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      onClick={() => navigate(item.url)}
+                      className={
+                        isActive
+                          ? "bg-muted text-destructive font-medium"
+                          : "hover:bg-muted/50"
+                      }>
+                      <item.icon className="mr-2 h-4 w-4" />
+                      <h4>{item.title}</h4>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -1,5 +1,6 @@
 import type  Customer  from "./customer";
 import type User from "./user";
+import type VehicleType from "./vehicle-type";
 
 
 export interface AuthState {
@@ -36,4 +37,17 @@ export interface CustomerState {
   ) => Promise<void>;
 
   deleteCustomer: (id: string) => Promise<void>;
+}
+
+export interface VehicleTypeState {
+  vehicleTypes: VehicleType[];
+  loading: boolean;
+  total: number;
+  page: number;
+  limit: number;
+  error: string | null;
+  fetchVehicleTypes: (page?: number, limit?: number) => Promise<void>;
+  addVehicleType: (vehicleTypeData: {  vehicle_type_name: string; description?: string }) => Promise<void>;
+  updateVehicleType: (id: string, vehicleTypeData: Partial<any>) => Promise<void>;
+  deleteVehicleType: (id: string) => Promise<void>;
 }

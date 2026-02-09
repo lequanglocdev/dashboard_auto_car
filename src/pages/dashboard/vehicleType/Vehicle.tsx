@@ -1,8 +1,8 @@
 import AppSidebar from "@/components/dashboard/appsidebar/AppSidebar";
 import Navbar from "@/components/dashboard/navbar/Navbar";
-import { Input } from "@/components/ui/input";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import AddVehicle from "./AddVehicle";
 import {
   Table,
   TableBody,
@@ -19,11 +19,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useVehicleTypeStore } from "@/store/useVehicleType";
+import { useEffect, useState } from "react";
 import { MoreHorizontalIcon } from "lucide-react";
-import { AddCustomer } from "./AddCustomer";
-import { useCustomerStore } from "@/store/useCustomerStore";
-import React, { useEffect } from "react";
-import { EditCustomer } from "./EditCustomer";
+import EditVehicle from "./EditVehicle";
 import {
   Pagination,
   PaginationContent,
@@ -33,24 +32,26 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-const Customer = () => {
-  const customers = useCustomerStore((state) => state.customers);
-  const loading = useCustomerStore((state) => state.loading);
-  const fetchCustomers = useCustomerStore((state) => state.fetchCustomers);
+const Vehicle = () => {
+  const vehicles = useVehicleTypeStore((state) => state.vehicleTypes);
+  const loading = useVehicleTypeStore((state) => state.loading);
+  const fetchVehicleTypes = useVehicleTypeStore(
+    (state) => state.fetchVehicleTypes
+  );
 
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = useState(1);
   const limit = 10;
 
-  const total = useCustomerStore((state) => state.total);
+  const total = useVehicleTypeStore((state) => state.total);
   const totalPages = Math.ceil(total / limit);
 
   useEffect(() => {
-    fetchCustomers(page, limit);
+    fetchVehicleTypes(page, limit);
   }, [page]);
-  
-  const [editingCustomer, setEditingCustomer] = React.useState<any>(null);
 
-  const deleteCustomer = useCustomerStore((state) => state.deleteCustomer);
+  const [editingVehicle, setEditingVehicle] = useState<any>(null);
+
+  const deleteVehicle = useVehicleTypeStore((state) => state.deleteVehicleType);
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -59,25 +60,17 @@ const Customer = () => {
           <AppSidebar />
           <div className="flex-1 flex flex-col overflow-hidden">
             <Navbar />
+
             <main className="flex-1 max-w-7xl w-full mx-auto overflow-y-auto p-6">
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center">
-                  <span className="mr-4">Tìm kiếm</span>
-                  <Input
-                    className="w-[400px]"
-                    placeholder="Tìm kiếm khách hàng"
-                  />
-                </div>
-                <AddCustomer />
+              <div className="flex justify-end items-end">
+                <AddVehicle />
               </div>
               <div>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Họ tên</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Số điện thoại</TableHead>
-                      <TableHead>Địa chỉ</TableHead>
+                      <TableHead>Tên</TableHead>
+                      <TableHead>Mô tả</TableHead>
                       <TableHead className="text-right">Tác vụ</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -90,21 +83,19 @@ const Customer = () => {
                       </TableRow>
                     )}
 
-                    {!loading && customers.length === 0 && (
+                    {!loading && vehicles.length === 0 && (
                       <TableRow>
                         <TableCell colSpan={5} className="text-center">
-                          Không có khách hàng
+                          Không có loại xe
                         </TableCell>
                       </TableRow>
                     )}
 
                     {!loading &&
-                      customers.map((customer) => (
-                        <TableRow key={customer._id}>
-                          <TableCell>{customer.name}</TableCell>
-                          <TableCell>{customer.email}</TableCell>
-                          <TableCell>{customer.phone_number}</TableCell>
-                          <TableCell>{customer.address}</TableCell>
+                      vehicles.map((vehicle) => (
+                        <TableRow key={vehicle._id}>
+                          <TableCell>{vehicle.vehicle_type_name}</TableCell>
+                          <TableCell>{vehicle.description}</TableCell>
                           <TableCell className="text-right">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
@@ -117,14 +108,14 @@ const Customer = () => {
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
                                 <DropdownMenuItem
-                                  onClick={() => setEditingCustomer(customer)}>
+                                  onClick={() => setEditingVehicle(vehicle)}>
                                   Sửa
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                   variant="destructive"
                                   className="text-red-500"
-                                  onClick={() => deleteCustomer(customer._id)}>
+                                  onClick={() => deleteVehicle(vehicle._id)}>
                                   Xóa
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
@@ -134,6 +125,7 @@ const Customer = () => {
                       ))}
                   </TableBody>
                 </Table>
+                {vehicles.length > 0 && totalPages > 10 && (  
                 <div className="flex justify-end mt-4">
                   <Pagination>
                     <PaginationContent>
@@ -148,23 +140,27 @@ const Customer = () => {
                       </PaginationItem>
 
                       <PaginationItem>
-                        <PaginationNext   onClick={() => page < totalPages && setPage(page + 1)} />
+                        <PaginationNext
+                          onClick={() => page < totalPages && setPage(page + 1)}
+                        />
                       </PaginationItem>
                     </PaginationContent>
                   </Pagination>
                 </div>
+                )}
               </div>
+                
             </main>
           </div>
         </div>
-        <EditCustomer
-          open={!!editingCustomer}
-          setOpen={() => setEditingCustomer(null)}
-          customer={editingCustomer}
+        <EditVehicle
+          open={!!editingVehicle}
+          setOpen={(open) => setEditingVehicle(open ? null : null)}
+          vehicle={editingVehicle}
         />
       </SidebarProvider>
     </ThemeProvider>
   );
 };
 
-export default Customer;
+export default Vehicle;

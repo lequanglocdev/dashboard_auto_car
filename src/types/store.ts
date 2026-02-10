@@ -1,4 +1,5 @@
 import type  Customer  from "./customer";
+import type Service from "./service";
 import type User from "./user";
 import type VehicleType from "./vehicle-type";
 
@@ -50,4 +51,17 @@ export interface VehicleTypeState {
   addVehicleType: (vehicleTypeData: {  vehicle_type_name: string; description?: string }) => Promise<void>;
   updateVehicleType: (id: string, vehicleTypeData: Partial<any>) => Promise<void>;
   deleteVehicleType: (id: string) => Promise<void>;
+}
+
+export interface ServicesState {
+  services: Service[];
+  loading: boolean;
+  total: number;
+  page: number;
+  limit: number;
+  error: string | null;
+  fetchServices: (page?: number, limit?: number) => Promise<void>;
+  addService:(serviceData: { service_code: string; name: string; description: string; time_required: number }) => Promise<void>;
+  updateService: (id: string, serviceData: Partial<Omit<Service, "_id" | "created_at" | "updated_at" | "is_deleted">>) => Promise<void>;
+  deleteService: (id: string) => Promise<void>;
 }

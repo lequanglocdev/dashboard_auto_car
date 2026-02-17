@@ -31,4 +31,14 @@ export const customerService = {
     const res = await api.delete(`/customers/${id}`, { withCredentials: true });
     return res.data;
   },
+  getById: async (id: string) => {
+    const res = await api.get(`/customers/${id}`, { withCredentials: true });
+    return res.data;
+  },
+  getByIdWithVehicles: async (id: string) => {
+    const res = await api.get(`/customers/${id}`, {
+      withCredentials: true,
+    });
+    return res.data;
+  }
 };

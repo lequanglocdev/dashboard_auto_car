@@ -88,4 +88,23 @@ export const useCustomerStore = create<CustomerState>((set) => ({
       toast.error("Xóa khách hàng thất bại");
     }
   },
+  getCustomerById: async (id: any) => {
+    try {
+      const res = await customerService.getById(id);
+      return res;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+  ,  getCustomerByIdWithVehicles: async (id: any) => {
+    try {
+      const res = await customerService.getByIdWithVehicles(id);
+      return res;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
+
 }));

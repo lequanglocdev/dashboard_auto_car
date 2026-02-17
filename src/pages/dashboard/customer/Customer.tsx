@@ -24,6 +24,7 @@ import { AddCustomer } from "./AddCustomer";
 import { useCustomerStore } from "@/store/useCustomerStore";
 import React, { useEffect } from "react";
 import { EditCustomer } from "./EditCustomer";
+import { useNavigate } from "react-router-dom";
 import {
   Pagination,
   PaginationContent,
@@ -44,10 +45,12 @@ const Customer = () => {
   const total = useCustomerStore((state) => state.total);
   const totalPages = Math.ceil(total / limit);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetchCustomers(page, limit);
   }, [page]);
-  
+
   const [editingCustomer, setEditingCustomer] = React.useState<any>(null);
 
   const deleteCustomer = useCustomerStore((state) => state.deleteCustomer);
@@ -100,7 +103,9 @@ const Customer = () => {
 
                     {!loading &&
                       customers.map((customer) => (
-                        <TableRow key={customer._id}>
+                        <TableRow
+                          key={customer._id}
+                          onClick={() => navigate(`/customer/${customer._id}`)}>
                           <TableCell>{customer.name}</TableCell>
                           <TableCell>{customer.email}</TableCell>
                           <TableCell>{customer.phone_number}</TableCell>
@@ -148,7 +153,9 @@ const Customer = () => {
                       </PaginationItem>
 
                       <PaginationItem>
-                        <PaginationNext   onClick={() => page < totalPages && setPage(page + 1)} />
+                        <PaginationNext
+                          onClick={() => page < totalPages && setPage(page + 1)}
+                        />
                       </PaginationItem>
                     </PaginationContent>
                   </Pagination>

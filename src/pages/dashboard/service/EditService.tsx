@@ -46,19 +46,16 @@ const EditService = ({open, setOpen, service}: EditServiceProps) => {
         <DialogHeader>
           <DialogTitle>Cập nhật dịch vụ</DialogTitle>
         </DialogHeader>
-
-        <Input
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          placeholder="Họ tên"
-        />
-
         <Input
           value={form.service_code}
           onChange={(e) => setForm({ ...form, service_code: e.target.value })}
           placeholder="Mã dịch vụ"
         />
-
+        <Input
+          value={form.name}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          placeholder="Họ tên"
+        />
         <Input
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}

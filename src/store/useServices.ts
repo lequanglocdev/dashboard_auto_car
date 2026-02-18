@@ -32,7 +32,7 @@ export const useServicesStore = create<ServicesState>((set) => ({
     try {
       const res = await serveiceService.add(serviceData);
       console.log(res);
-      const newService = res;
+      const newService = res.service;
       const mapped: Service = {
         _id: newService._id ?? newService._id,
         service_code: newService.service_code,

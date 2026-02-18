@@ -50,7 +50,7 @@ const Service = () => {
                   <span className="mr-4">Tìm kiếm</span>
                   <Input
                     className="w-[400px]"
-                    placeholder="Tìm kiếm khách hàng"
+                    placeholder="Tìm kiếm dịch vụ"
                   />
                 </div>
                 <AddService />
@@ -61,8 +61,8 @@ const Service = () => {
                     <TableRow>
                       <TableHead>Mã dịch vụ</TableHead>
                       <TableHead>Tên dịch vụ </TableHead>
+                      <TableHead>Mô tả</TableHead>
                       <TableHead>Thời gian</TableHead>
-                      <TableHead>Địa chỉ</TableHead>
                       <TableHead className="text-right">Tác vụ</TableHead>
                     </TableRow>
                   </TableHeader>

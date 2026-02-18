@@ -1,4 +1,3 @@
-
 import { vehicleService } from "@/services/vehicle";
 import type { VehicleCustomerState } from "@/types/store";
 
@@ -20,9 +19,9 @@ export const useVehicleByCustomerStore = create<VehicleCustomerState>(
           vehicle: [res.vehicle, ...state.vehicle],
         }));
 
-        toast.success("Thêm xe thành công");
-      } catch (error) {
-        console.error(error);
+        toast.success(res.message);
+      } catch (error: any) {
+        toast.error(error.message);
       }
     },
 
@@ -36,23 +35,23 @@ export const useVehicleByCustomerStore = create<VehicleCustomerState>(
           ),
         }));
 
-        toast.success("Cập nhật xe thành công");
-      } catch (error) {
-        console.error(error);
+        toast.success(res.message);
+      } catch (error: any) {
+        toast.error(error.message);
       }
     },
 
     deleteVehicleByCustomerId: async (customerId, vehicleId) => {
       try {
-        await vehicleService.delete(customerId, vehicleId);
+      const res = await vehicleService.delete(customerId, vehicleId);
 
         set((state) => ({
           vehicle: state.vehicle.filter((v) => v._id !== vehicleId),
         }));
 
-        toast.success("Xóa xe thành công");
-      } catch (error) {
-        console.error(error);
+        toast.success(res.message);
+      } catch (error: any) {
+        toast.error(error.message);
       }
     },
   })

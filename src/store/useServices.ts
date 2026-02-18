@@ -22,8 +22,8 @@ export const useServicesStore = create<ServicesState>((set) => ({
         limit,
         loading: false,
       });
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      toast.error(error.message || "Lỗi khi tải dịch vụ");
     } finally {
       set({ loading: false });
     }
@@ -47,9 +47,8 @@ export const useServicesStore = create<ServicesState>((set) => ({
         services: [mapped, ...state.services],
         total: state.total + 1,
       }));
-      toast.success("Thêm dịch vụ thành công");
+      toast.success(res.message);
     } catch (error: any) {
-      console.error(error);
       toast.error(error.message);
       throw error;
     }
@@ -73,7 +72,6 @@ export const useServicesStore = create<ServicesState>((set) => ({
       }));
       toast.success("Xóa dịch vụ thành công");
     } catch (error: any) {
-      console.error(error);
       toast.error(error.message);
       throw error;
     }

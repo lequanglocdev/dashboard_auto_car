@@ -44,8 +44,9 @@ const CustomerDetail = () => {
 
   const [editingVehicleByCustomer, setEditingVehicleByCustomer ] = useState<any>(null);
   
-  const deleteCustomer = useCustomerStore((state) => state.deleteCustomer);
-
+  const deleteVehicleByCustomerId = useVehicleByCustomerStore(
+    (state) => state.deleteVehicleByCustomerId
+  );
 
   useEffect(() => {
     if (!id) return;
@@ -179,7 +180,7 @@ const CustomerDetail = () => {
                                     variant="destructive"
                                     className="text-red-500"
                                     onClick={() =>
-                                      deleteCustomer(customer._id)
+                                      deleteVehicleByCustomerId(customer._id, vehicle._id)
                                     }>
                                     Xóa
                                   </DropdownMenuItem>

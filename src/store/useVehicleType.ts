@@ -15,7 +15,7 @@ export const useVehicleTypeStore = create<VehicleTypeState>((set) => ({
   fetchVehicleTypes: async (page = 1, limit = 10) => {
     try {
       set({ loading: true });
-      const res = await vehicleTypeService.getAll(page,limit);
+      const res = await vehicleTypeService.getAll(page, limit);
       set({
         vehicleTypes: res.vehicleTypes || [],
         total: res.total || 0,
@@ -32,7 +32,7 @@ export const useVehicleTypeStore = create<VehicleTypeState>((set) => ({
   addVehicleType: async (vehicleTypeData) => {
     try {
       const res = await vehicleTypeService.add(vehicleTypeData);
-      console.log("log:",res)
+      console.log("log:", res);
       const newVehicleType = res.vehicleType;
       const mapped: VehicleType = {
         _id: newVehicleType.id ?? newVehicleType._id,
@@ -43,9 +43,8 @@ export const useVehicleTypeStore = create<VehicleTypeState>((set) => ({
         vehicleTypes: [mapped, ...state.vehicleTypes],
         total: state.total + 1,
       }));
-      toast.success("Thêm loại xe thành công");
+      toast.success(res.message);
     } catch (error: any) {
-      console.error(error);
       toast.error(error.message);
       throw error;
     }
@@ -60,9 +59,7 @@ export const useVehicleTypeStore = create<VehicleTypeState>((set) => ({
         ),
       }));
       toast.success("Cập nhật loại xe thành công");
-    }
-    catch (error) {
-      console.error(error);
+    } catch (error) {
       toast.error("Cập nhật loại xe thất bại");
       throw error;
     }
@@ -77,9 +74,8 @@ export const useVehicleTypeStore = create<VehicleTypeState>((set) => ({
       }));
       toast.success("Xóa loại xe thành công");
     } catch (error) {
-      console.error(error);
       toast.error("Xóa loại xe thất bại");
       throw error;
     }
   },
-}))
+}));

@@ -48,18 +48,19 @@ const EditVehicleCustomer = ({
   }, [vehicle]);
 
   const handleSubmit = async () => {
-    if (vehicle) {
-      await updateVehicleByCustomerId(vehicle.customer_id, vehicle._id, {
-        vehicle_type_id: form.vehicle_type_id,
-        license_plate: form.license_plate,
-        manufacturer: form.manufacturer,
-        model: form.model,
-        year: parseInt(form.year),
-        color: form.color,
-      });
-      setOpen(false);
-    }
+    if (!vehicle) return;
+    await updateVehicleByCustomerId(vehicle.customer_id, vehicle._id, {
+      vehicle_type_id: form.vehicle_type_id,
+      license_plate: form.license_plate,
+      manufacturer: form.manufacturer,
+      model: form.model,
+      year: parseInt(form.year),
+      color: form.color,
+    });
+
+    setOpen(false);
   };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
@@ -76,8 +77,7 @@ const EditVehicleCustomer = ({
               vehicle_type_id: e.target.value,
             })
           }>
-
-         {vehicleTypes.map((type) => (
+          {vehicleTypes.map((type) => (
             <option key={type._id} value={type._id}>
               {type.vehicle_type_name}
             </option>
@@ -89,7 +89,6 @@ const EditVehicleCustomer = ({
           onChange={(e) => setForm({ ...form, license_plate: e.target.value })}
           placeholder="Biên số xe"
         />
-
         <Input
           value={form.manufacturer}
           onChange={(e) => setForm({ ...form, manufacturer: e.target.value })}

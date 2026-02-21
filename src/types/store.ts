@@ -1,4 +1,5 @@
 import type Customer from "./customer";
+import type { CreatePriceLine, PriceHeader, PriceLine } from "./price";
 import type Service from "./service";
 import type User from "./user";
 import type { CreateVehicle } from "./vehicle";
@@ -103,4 +104,31 @@ export interface VehicleCustomerState {
     customerId: string,
     vehicleId: string
   ) => Promise<void>;
+}
+
+
+export interface PriceState {
+  priceHeaders: PriceHeader[];
+  priceLines: PriceLine[];
+  loading: boolean;
+  error: string | null;
+
+  fetchPriceHeaders: () => Promise<void>;
+  addPriceHeader: (data: Omit<PriceHeader, "_id">) => Promise<void>;
+  updatePriceHeader: (
+    id: string,
+    data: Partial<Omit<PriceHeader, "_id">>
+  ) => Promise<void>;
+  deletePriceHeader: (id: string) => Promise<void>;
+
+  fetchPriceLines: (priceHeaderId: string) => Promise<void>;
+  addPriceLine: (
+    priceHeaderId: string,
+    data: Partial<CreatePriceLine>
+  ) => Promise<void>;
+  updatePriceLine: (
+    id: string,
+    data: Partial<Omit<PriceLine, "_id">>
+  ) => Promise<void>;
+  deletePriceLine: (id: string) => Promise<void>;
 }

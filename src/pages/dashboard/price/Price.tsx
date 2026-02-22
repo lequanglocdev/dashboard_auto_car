@@ -23,6 +23,8 @@ import { AddPriceHeader } from "./AddPriceHeader";
 import { Input } from "@/components/ui/input";
 import { AddPriceLineDialog } from "./AddPriceLineDialog";
 import { EditPriceHeader } from "./EditPriceHeader";
+import { EditPriceLine } from "./EditPriceLine";
+import { Switch } from "@/components/ui/switch";
 
 const Price = () => {
   const {
@@ -37,7 +39,14 @@ const Price = () => {
 
   const [editingPriceHeader, setEditingPriceHeader] = React.useState<any>(null);
 
+  const [editingPriceLine, setEditingPriceLine] = React.useState<any>(null);
+
   const deletePriceHeader = usePriceStore((state) => state.deletePriceHeader);
+
+  const deletePriceLine = usePriceStore((state) => state.deletePriceLine);
+
+  const togglePriceLine = usePriceStore((state) => state.togglePriceLine);
+
   // Load header khi vào page
   useEffect(() => {
     fetchPriceHeaders();
@@ -159,16 +168,32 @@ const Price = () => {
                                     {line.price.toLocaleString()} đ
                                   </TableCell>
                                   <TableCell>
-                                    {/* nếu nó true thì là hoạt động còn false thì ko hoạt đông */}
-                                    {line.is_active
-                                      ? "Hoạt động"
-                                      : "Không hoat động"}
+                                    <div
+                                      className="px-8 flex items-center"
+                                      onClick={(e) => e.stopPropagation()} // 🔥 quan trọng vì nằm trong AccordionTrigger
+                                    >
+                                      <Switch
+                                        checked={line.is_active}
+                                        onCheckedChange={() =>
+                                          togglePriceLine(line._id)
+                                        }
+                                      />
+                                    </div>
                                   </TableCell>
+
                                   <TableCell>
-                                    <button className="text-green-500 px-4">
+                                    <button
+                                      onClick={() => setEditingPriceLine(line)}
+                                      className="text-green-500 px-4">
                                       Sửa
                                     </button>
-                                    <button className="text-red-500">
+                                    <button
+                                      onClick={(e) => {
+                                        console.log("Deleting:", line._id);
+                                        e.stopPropagation();
+                                        deletePriceLine(line._id);
+                                      }}
+                                      className="text-red-500">
                                       Xóa
                                     </button>
                                   </TableCell>
@@ -195,6 +220,11 @@ const Price = () => {
           open={!!editingPriceHeader}
           setOpen={() => setEditingPriceHeader(null)}
           priceHeader={editingPriceHeader}
+        />
+        <EditPriceLine
+          open={!!editingPriceLine}
+          setOpen={() => setEditingPriceLine(null)}
+          priceLine={editingPriceLine}
         />
       </SidebarProvider>
     </ThemeProvider>

@@ -54,7 +54,7 @@ export const EditPriceHeader = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Cập nhật khách hàng</DialogTitle>
+          <DialogTitle>Cập nhật bảng giá</DialogTitle>
         </DialogHeader>
 
         <Input

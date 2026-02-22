@@ -34,12 +34,16 @@ export const priceService = {
   },
 
   updateLine: async (id: string, data: any) => {
-    const res = await api.put(`/price/${id}`, data);
+    const res = await api.put(`/price/line/${id}`, data);
     return res.data;
   },
 
   deleteLine: async (id: string) => {
-    const res = await api.delete(`/price/${id}`);
+    const res = await api.delete(`/price/line/${id}`);
+    return res.data;
+  },
+  toggleLine: async (id: string) => {
+    const res = await api.patch(`/price/line/${id}/toggle`);
     return res.data;
   },
 };

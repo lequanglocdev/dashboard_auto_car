@@ -83,7 +83,7 @@ export const usePriceStore = create<PriceState>((set) => ({
     try {
       const res = await priceService.addLine(priceHeaderId, data);
       console.log("add response", res.priceLine);
-      
+
       set((state) => ({
         priceLines: [res.priceLine, ...state.priceLines],
       }));
@@ -123,5 +123,14 @@ export const usePriceStore = create<PriceState>((set) => ({
     } catch (error: any) {
       toast.error(error.message);
     }
+  },
+  togglePriceLine: async (id: string) => {
+    const res = await priceService.toggleLine(id);
+
+    set((state) => ({
+      priceLines: state.priceLines.map((line) =>
+        line._id === id ? res.priceLine : line
+      ),
+    }));
   },
 }));

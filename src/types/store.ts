@@ -1,5 +1,6 @@
 import type Customer from "./customer";
 import type { CreatePriceLine, PriceHeader, PriceLine } from "./price";
+import type { CreatePromotionDetail, CreatePromotionHeader, CreatePromotionLine, PromotionDetail, PromotionHeader, PromotionLine, UpdatePromotionDetail, UpdatePromotionHeader, UpdatePromotionLine } from "./promotion";
 import type Service from "./service";
 import type User from "./user";
 import type { CreateVehicle } from "./vehicle";
@@ -131,4 +132,43 @@ export interface PriceState {
     data: Partial<Omit<PriceLine, "_id">>
   ) => Promise<void>;
   deletePriceLine: (id: string) => Promise<void>;
+  togglePriceLine: (id: string) => Promise<void>;
+}
+
+export interface PromotionState {
+  promotionHeaders: PromotionHeader[];
+  promotionLines: PromotionLine[];
+  promotionDetails: PromotionDetail[];
+  loading: boolean;
+  error: string | null;
+
+  // HEADER
+  fetchPromotionHeaders: () => Promise<void>;
+  addPromotionHeader: (data: CreatePromotionHeader) => Promise<void>;
+  updatePromotionHeader: (
+    id: string,
+    data: UpdatePromotionHeader
+  ) => Promise<void>;
+  deletePromotionHeader: (id: string) => Promise<void>;
+
+  // LINE
+  fetchPromotionLines: (promotionHeaderId: string) => Promise<void>;
+  addPromotionLine: (
+    promotionHeaderId: string,
+    data: CreatePromotionLine
+  ) => Promise<void>;
+  updatePromotionLine: (id: string, data: UpdatePromotionLine) => Promise<void>;
+  deletePromotionLine: (id: string) => Promise<void>;
+
+  // DETAIL
+  fetchPromotionDetails: (promotionLineId: string) => Promise<void>;
+  addPromotionDetail: (
+    promotionLineId: string,
+    data: CreatePromotionDetail
+  ) => Promise<void>;
+  updatePromotionDetail: (
+    id: string,
+    data: UpdatePromotionDetail
+  ) => Promise<void>;
+  deletePromotionDetail: (id: string) => Promise<void>;
 }

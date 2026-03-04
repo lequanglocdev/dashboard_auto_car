@@ -24,6 +24,9 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { AddPromotionHeader } from "./AddPromotionHeader";
 import AddPromotionLineDialog from "./AddPromotionLineDialog";
+import { EditPromotionHeaderDialog } from "./EditPromotionHeaderDialog";
+import { EditPromotionLineDialog } from "./EditPromotionLineDialog";
+import AddPromotionDetailDialog from "./AddPromotionDetail";
 
 const Promotion = () => {
   const {
@@ -32,11 +35,16 @@ const Promotion = () => {
     fetchPromotionHeaders,
     fetchPromotionLines,
     loading,
+    promotionDetails,
+    fetchPromotionDetails,
   } = usePromotionStore();
 
+  console.log(">>promotionheader", promotionHeaders);
   const [activeHeader, setActiveHeader] = useState<string | null>(null);
-  // const [editingHeader, setEditingHeader] = useState<any>(null);
-  // const [editingLine, setEditingLine] = useState<any>(null);
+  const [activeLine, setActiveLine] = useState<string | null>(null);
+
+  const [editingHeader, setEditingHeader] = useState<any>(null);
+  const [editingLine, setEditingLine] = useState<any>(null);
 
   const deletePromotionHeader = usePromotionStore(
     (state) => state.deletePromotionHeader
@@ -55,6 +63,11 @@ const Promotion = () => {
   const handleOpen = async (value: string) => {
     setActiveHeader(value);
     await fetchPromotionLines(value);
+  };
+
+  const handleOpenLine = async (lineId: string) => {
+    setActiveLine(lineId);
+    await fetchPromotionDetails(lineId);
   };
 
   return (
@@ -98,20 +111,22 @@ const Promotion = () => {
                   <AccordionItem key={header._id} value={header._id}>
                     <AccordionTrigger className="py-3 hover:no-underline">
                       <div className="grid grid-cols-7 w-full items-center text-sm font-medium">
-                        <div>{header.promotion_code}</div>
-                        <div>{header.name}</div>
-                        <div>{header.description}</div>
-                        <div className="">
+                        <span className="ml-4">{header.promotion_code}</span>
+                        <span className="ml-4">{header.name}</span>
+                        <span className="whitespace-normal break-words max-w-[80px]">
+                          {header.description}
+                        </span>
+                        <span className="">
                           {new Date(header.start_date).toLocaleDateString(
                             "vi-VN"
                           )}
-                        </div>
+                        </span>
 
-                        <div className="">
+                        <span className="">
                           {new Date(header.end_date).toLocaleDateString(
                             "vi-VN"
                           )}
-                        </div>
+                        </span>
 
                         <div className="">
                           <span
@@ -126,12 +141,22 @@ const Promotion = () => {
 
                         <div className="flex justify-end gap-3 ">
                           <div onClick={(e) => e.stopPropagation()}>
-                            <AddPromotionLineDialog  />
+                            <AddPromotionLineDialog headerId={header._id} />
                           </div>
 
-                          <button className="text-green-500">Sửa</button>
                           <button
-                            onClick={() => deletePromotionHeader(header._id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingHeader(header);
+                            }}
+                            className="text-green-500">
+                            Sửa
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deletePromotionHeader(header._id);
+                            }}
                             className="text-red-500">
                             Xóa
                           </button>
@@ -147,7 +172,8 @@ const Promotion = () => {
                           <TableHeader>
                             <TableRow>
                               <TableHead>Loại giảm giá </TableHead>
-                              <TableHead>Mô tả dòng khuyến mãi</TableHead>
+                              <TableHead>Mô tả dòng</TableHead>
+                              <TableHead></TableHead>
                               <TableHead>Trạng thái</TableHead>
                               <TableHead>Tác vụ</TableHead>
                             </TableRow>
@@ -157,48 +183,128 @@ const Promotion = () => {
                             {activeHeader === header._id &&
                             promotionLines.length > 0 ? (
                               promotionLines.map((line) => (
-                                <TableRow key={line._id}>
-                                  {/* <TableCell>{line.service_id.name}</TableCell> */}
+                                <React.Fragment key={line._id}>
+                                  <TableRow
+                                    className="cursor-pointer"
+                                    onClick={() => handleOpenLine(line._id)}>
+                                    <TableCell>
+                                      {line.discount_type === "percentage"
+                                        ? "Phần trăm"
+                                        : "Cố định"}
+                                    </TableCell>
+                                    <TableCell>{line.description}</TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell>
+                                      <div
+                                        className=""
+                                        onClick={(e) => e.stopPropagation()}>
+                                        <Switch checked={line.is_active} />
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>
+                                      <button
+                                        onClick={(e) => e.stopPropagation()}>
+                                        <AddPromotionDetailDialog
+                                          promotionLineId={line._id}
+                                        />
+                                      </button>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setEditingLine(line);
+                                        }}
+                                        className="text-green-500 px-4">
+                                        Sửa
+                                      </button>
 
-                                  {/* <TableCell>
-                                    {line.vehicle_type_id?.vehicle_type_name}
-                                  </TableCell>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          deletePromotionLine(line._id);
+                                        }}
+                                        className="text-red-500">
+                                        Xóa
+                                      </button>
+                                    </TableCell>
+                                  </TableRow>
 
-                                  <TableCell>
-                                    {line.type === "percent"
-                                      ? "Phần trăm"
-                                      : "Giảm giá cố định"}
-                                  </TableCell>
+                                  {/* DETAIL TABLE */}
+                                  {activeLine === line._id && (
+                                    <TableRow>
+                                      <TableCell colSpan={5}>
+                                        <Table>
+                                          <TableHeader>
+                                            <TableRow>
+                                              <TableHead>Cấp bậc</TableHead>
+                                              <TableHead>
+                                                Giá trị giảm
+                                              </TableHead>
+                                              <TableHead>
+                                                Số tiền tối thiểu
+                                              </TableHead>
+                                              <TableHead>Trạng thái</TableHead>
+                                              <TableHead>Tác vụ</TableHead>
+                                            </TableRow>
+                                          </TableHeader>
 
-                                  <TableCell>
-                                    {line.type === "percent"
-                                      ? `${line.value}%`
-                                      : `${line.value.toLocaleString()} đ`}
-                                  </TableCell> */}
+                                          <TableBody>
+                                            {promotionDetails.length > 0 ? (
+                                              promotionDetails.map((detail) => (
+                                                <TableRow key={detail._id}>
+                                                  <TableCell>
+                                                    {
+                                                      detail.applicable_rank_id
+                                                        ?.rank_name
+                                                    }
+                                                  </TableCell>
 
-                                  <TableCell>
-                                    <div
-                                      className="px-4"
-                                      onClick={(e) => e.stopPropagation()}>
-                                      <Switch checked={line.is_active} />
-                                    </div>
-                                  </TableCell>
+                                                  <TableCell>
+                                                    {detail.discount_value}
+                                                  </TableCell>
 
-                                  <TableCell>
-                                    <button className="text-green-500 px-4">
-                                      Sửa
-                                    </button>
+                                                  <TableCell>
+                                                    {detail.min_order_value}
+                                                  </TableCell>
 
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        deletePromotionLine(line._id);
-                                      }}
-                                      className="text-red-500">
-                                      Xóa
-                                    </button>
-                                  </TableCell>
-                                </TableRow>
+                                                  <TableCell>
+                                                    <Switch
+                                                      checked={detail.is_active}
+                                                    />
+                                                  </TableCell>
+                                                  <TableCell>
+                                                    <button
+                                                      onClick={(e) => {
+                                                        e.stopPropagation();
+                                                      }}
+                                                      className="text-green-500 px-4">
+                                                      Sửa
+                                                    </button>
+
+                                                    <button
+                                                      onClick={(e) => {
+                                                        e.stopPropagation();
+                                                      }}
+                                                      className="text-red-500">
+                                                      Xóa
+                                                    </button>
+                                                  </TableCell>
+                                                </TableRow>
+                                              ))
+                                            ) : (
+                                              <TableRow>
+                                                <TableCell
+                                                  colSpan={4}
+                                                  className="text-center">
+                                                  Không có chi tiết
+                                                </TableCell>
+                                              </TableRow>
+                                            )}
+                                          </TableBody>
+                                        </Table>
+                                      </TableCell>
+                                    </TableRow>
+                                  )}
+                                </React.Fragment>
                               ))
                             ) : (
                               <TableRow>
@@ -217,6 +323,16 @@ const Promotion = () => {
             </main>
           </div>
         </div>
+        <EditPromotionHeaderDialog
+          open={!!editingHeader}
+          setOpen={() => setEditingHeader(null)}
+          header={editingHeader}
+        />
+        <EditPromotionLineDialog
+          open={!!editingLine}
+          setOpen={() => setEditingLine(null)}
+          line={editingLine}
+        />
       </SidebarProvider>
     </ThemeProvider>
   );

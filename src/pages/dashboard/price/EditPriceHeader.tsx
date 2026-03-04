@@ -21,6 +21,7 @@ export const EditPriceHeader = ({
   setOpen,
   priceHeader,
 }: EditPriceHeaderProps) => {
+  
   const updatePriceHeader = usePriceStore((state) => state.updatePriceHeader);
 
   const [form, setForm] = useState({
@@ -56,7 +57,6 @@ export const EditPriceHeader = ({
         <DialogHeader>
           <DialogTitle>Cập nhật bảng giá</DialogTitle>
         </DialogHeader>
-
         <Input
           value={form.price_list_name}
           onChange={(e) =>
@@ -64,21 +64,18 @@ export const EditPriceHeader = ({
           }
           placeholder="Tên bảng giá"
         />
-
         <Input
           type="date"
           value={form.start_date}
           onChange={(e) => setForm({ ...form, start_date: e.target.value })}
           placeholder="Ngày bắt đầu"
         />
-
         <Input
           type="date"
           value={form.end_date}
           onChange={(e) => setForm({ ...form, end_date: e.target.value })}
           placeholder="Ngày kết thúc"
         />
-
         <Button variant={"destructive"} onClick={handleSubmit}>
           Lưu
         </Button>

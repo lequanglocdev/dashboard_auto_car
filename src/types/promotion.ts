@@ -45,6 +45,7 @@ export type CreatePromotionLine = {
   description?: string;
   start_date: string;
   end_date: string;
+  is_active:boolean
 };
 
 export type UpdatePromotionLine = Partial<
@@ -58,22 +59,15 @@ export interface PopulatedRank {
   rank_name: string;
 }
 
-export interface PopulatedService {
-  _id: string;
-  service_name: string;
-}
-
 export interface PromotionDetail extends BaseEntity {
   promotion_line_id: string;
-  applicable_rank_id?: PopulatedRank;
-  service_id?: PopulatedService;
+  applicable_rank_id: PopulatedRank;
   discount_value: number;
   min_order_value: number;
 }
 
 export type CreatePromotionDetail = {
-  applicable_rank_id?: string;
-  service_id?: string;
+  applicable_rank_id: string;
   discount_value: number;
   min_order_value: number;
 };

@@ -17,14 +17,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-
 import { usePriceStore } from "@/store/usePriceStore";
 import { AddPriceHeader } from "./AddPriceHeader";
-import { Input } from "@/components/ui/input";
 import { AddPriceLineDialog } from "./AddPriceLineDialog";
 import { EditPriceHeader } from "./EditPriceHeader";
 import { EditPriceLine } from "./EditPriceLine";
 import { Switch } from "@/components/ui/switch";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontalIcon } from "lucide-react";
 
 const Price = () => {
   const {
@@ -47,16 +54,16 @@ const Price = () => {
 
   const togglePriceLine = usePriceStore((state) => state.togglePriceLine);
 
-  // Load header khi vào page
-  useEffect(() => {
-    fetchPriceHeaders();
-  }, []);
+  const togglePriceHead = usePriceStore((state) => state.togglePriceHead);
 
-  // Load line khi mở accordion
   const handleOpen = async (value: string) => {
     setActiveHeader(value);
     await fetchPriceLines(value);
   };
+
+  useEffect(() => {
+    fetchPriceHeaders();
+  }, []);
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -65,26 +72,17 @@ const Price = () => {
           <AppSidebar />
           <div className="flex-1 flex flex-col overflow-hidden">
             <Navbar />
-
             <main className="flex-1 max-w-7xl w-full mx-auto overflow-y-auto p-6">
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center">
-                  <span className="mr-4">Tìm kiếm</span>
-                  <Input
-                    className="w-[400px]"
-                    placeholder="Tìm kiếm khách hàng"
-                  />
-                </div>
+              <div className="flex items-center justify-end mb-8">
                 <AddPriceHeader />
               </div>
               <div className="bg-destructive/40 p-4 grid grid-cols-5 rounded-md text-sm font-semibold">
-                <div>TÊN BẢNG GIÁ</div>
-                <div>NGÀY BẮT ĐẦU</div>
-                <div>NGÀY KẾT THÚC</div>
-                <div>TRẠNG THÁI</div>
-                <div className="text-right">TÁC VỤ</div>
+                <span>TÊN BẢNG GIÁ</span>
+                <span>NGÀY BẮT ĐẦU</span>
+                <span>NGÀY KẾT THÚC</span>
+                <span>TRẠNG THÁI</span>
+                <span className="text-right">TÁC VỤ</span>
               </div>
-
               <Accordion
                 type="single"
                 collapsible
@@ -110,36 +108,42 @@ const Price = () => {
                           )}
                         </div>
 
-                        <div className="px-8">
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs ${
-                              header.is_active
-                                ? "bg-green-100 text-green-600"
-                                : "bg-red-100 text-red-600"
-                            }`}>
-                            {header.is_active ? "Hoạt động" : "Không hoạt động"}
-                          </span>
+                        <div className="px-8 flex items-center">
+                          <Switch
+                            checked={header.is_active}
+                            onCheckedChange={() => togglePriceHead(header._id)}
+                          />
                         </div>
-
-                        <div className="flex gap-3 justify-end">
-                          <div onClick={(e) => e.stopPropagation()}>
-                            <AddPriceLineDialog headerId={header._id} />
-                          </div>
-
-                          <button
-                            onClick={() => setEditingPriceHeader(header)}
-                            className="text-green-500">
-                            Sửa
-                          </button>
-                          <button
-                            onClick={() => deletePriceHeader(header._id)}
-                            className="text-red-500">
-                            Xóa
-                          </button>
-                        </div>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="size-8">
+                                <MoreHorizontalIcon />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <div>
+                                <AddPriceLineDialog headerId={header._id} />
+                              </div>
+                              <DropdownMenuItem
+                                onClick={() => setEditingPriceHeader(header)}>
+                                Sửa
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => deletePriceHeader(header._id)}
+                                variant="destructive"
+                                className="text-red-500">
+                                Xóa
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
                       </div>
                     </AccordionTrigger>
-
                     <AccordionContent>
                       {loading ? (
                         <p>Loading...</p>
@@ -170,8 +174,7 @@ const Price = () => {
                                   <TableCell>
                                     <div
                                       className="px-8 flex items-center"
-                                      onClick={(e) => e.stopPropagation()} // 🔥 quan trọng vì nằm trong AccordionTrigger
-                                    >
+                                      onClick={(e) => e.stopPropagation()}>
                                       <Switch
                                         checked={line.is_active}
                                         onCheckedChange={() =>
@@ -180,22 +183,36 @@ const Price = () => {
                                       />
                                     </div>
                                   </TableCell>
-
                                   <TableCell>
-                                    <button
-                                      onClick={() => setEditingPriceLine(line)}
-                                      className="text-green-500 px-4">
-                                      Sửa
-                                    </button>
-                                    <button
-                                      onClick={(e) => {
-                                        console.log("Deleting:", line._id);
-                                        e.stopPropagation();
-                                        deletePriceLine(line._id);
-                                      }}
-                                      className="text-red-500">
-                                      Xóa
-                                    </button>
+                                    <DropdownMenu>
+                                      <DropdownMenuTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="size-8">
+                                          <MoreHorizontalIcon />
+                                        </Button>
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent align="end">
+                                        <DropdownMenuItem
+                                          onClick={() =>
+                                            setEditingPriceLine(line)
+                                          }>
+                                          Sửa
+                                        </DropdownMenuItem>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem
+                                          variant="destructive"
+                                          className="text-red-500"
+                                          onClick={(e) => {
+                                            console.log("Deleting:", line._id);
+                                            e.stopPropagation();
+                                            deletePriceLine(line._id);
+                                          }}>
+                                          Xóa
+                                        </DropdownMenuItem>
+                                      </DropdownMenuContent>
+                                    </DropdownMenu>
                                   </TableCell>
                                 </TableRow>
                               ))

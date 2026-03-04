@@ -36,6 +36,7 @@ export const AddPriceLineDialog = ({ headerId }: Props) => {
 
   const vehicleTypes = useVehicleTypeStore((state) => state.vehicleTypes);
   const service = useServicesStore((state) => state.services);
+
   const {
     register,
     handleSubmit,
@@ -54,11 +55,12 @@ export const AddPriceLineDialog = ({ headerId }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button onClick={(e) => e.stopPropagation()} className="text-green-500">
-          Thêm
-        </button>
+        <h4
+          onClick={(e) => e.stopPropagation()}
+          className="text-sm ml-1 py-1 cursor-pointer">
+          Thêm dòng giá
+        </h4>
       </DialogTrigger>
-
       <DialogContent className="sm:max-w-sm">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
@@ -79,7 +81,6 @@ export const AddPriceLineDialog = ({ headerId }: Props) => {
                 ))}
               </select>
             </div>
-
             <div>
               <Label className="py-4">Loại xe</Label>
               <select
@@ -93,7 +94,6 @@ export const AddPriceLineDialog = ({ headerId }: Props) => {
                 ))}
               </select>
             </div>
-
             <div>
               <Label className="py-4">Giá</Label>
               <Input
@@ -105,14 +105,12 @@ export const AddPriceLineDialog = ({ headerId }: Props) => {
               )}
             </div>
           </div>
-
           <DialogFooter className="mt-6">
             <DialogClose asChild>
               <Button type="button" variant="outline">
                 Hủy
               </Button>
             </DialogClose>
-
             <Button variant="destructive" type="submit">
               Lưu
             </Button>

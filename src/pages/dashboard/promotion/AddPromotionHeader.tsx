@@ -18,19 +18,13 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const schema = z
-  .object({
-    promotion_code: z.string().min(1, "Mã khuyến mãi là bắt buộc"),
-    name: z.string().min(1, "Tên khuyến mãi là bắt buộc"),
-    description: z.string().optional(), // ✅ thêm dòng này
-    start_date: z.string().min(1, "Chọn ngày bắt đầu"),
-    end_date: z.string().min(1, "Chọn ngày kết thúc"),
-  })
-  .refine((data) => new Date(data.start_date) < new Date(data.end_date), {
-    message: "Ngày kết thúc phải sau ngày bắt đầu",
-    path: ["end_date"],
-  });
-
+const schema = z.object({
+  promotion_code: z.string().min(1, "Mã khuyến mãi là bắt buộc"),
+  name: z.string().min(1, "Tên khuyến mãi là bắt buộc"),
+  description: z.string().optional(), // ✅ thêm dòng này
+  start_date: z.string().min(1, "Chọn ngày bắt đầu"),
+  end_date: z.string().min(1, "Chọn ngày kết thúc"),
+});
 
 type FormValues = z.infer<typeof schema>;
 

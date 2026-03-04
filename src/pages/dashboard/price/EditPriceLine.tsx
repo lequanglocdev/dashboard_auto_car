@@ -24,9 +24,8 @@ export const EditPriceLine = ({
   priceLine,
 }: EditPriceLineProps) => {
   const updatePriceLine = usePriceStore((state) => state.updatePriceLine);
-  const services = useServicesStore((state) => state.services)
- const vehicleTypes = useVehicleTypeStore((state) => state.vehicleTypes);
-
+  const services = useServicesStore((state) => state.services);
+  const vehicleTypes = useVehicleTypeStore((state) => state.vehicleTypes);
   const [form, setForm] = useState({
     service_id: "",
     vehicle_type_id: "",
@@ -49,7 +48,6 @@ export const EditPriceLine = ({
     }
   }, [priceLine]);
 
-
   const handleSubmit = async () => {
     if (priceLine) {
       const updatedPriceLine = {
@@ -69,7 +67,6 @@ export const EditPriceLine = ({
         <DialogHeader>
           <DialogTitle>Cập nhật dòng bảng giá</DialogTitle>
         </DialogHeader>
-
         <select
           className="w-full border rounded-md px-3 py-2"
           value={form.service_id}
@@ -85,7 +82,6 @@ export const EditPriceLine = ({
             </option>
           ))}
         </select>
-
         <select
           className="w-full border rounded-md px-3 py-2"
           value={form.vehicle_type_id}
@@ -101,13 +97,11 @@ export const EditPriceLine = ({
             </option>
           ))}
         </select>
-
         <Input
           value={form.price}
           onChange={(e) => setForm({ ...form, price: e.target.value })}
           placeholder="SĐT"
         />
-
         <Button variant={"destructive"} onClick={handleSubmit}>
           Lưu
         </Button>

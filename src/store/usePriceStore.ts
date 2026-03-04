@@ -124,13 +124,32 @@ export const usePriceStore = create<PriceState>((set) => ({
       toast.error(error.message);
     }
   },
-  togglePriceLine: async (id: string) => {
-    const res = await priceService.toggleLine(id);
+  togglePriceHead: async (id: string) => {
+    try {
+      const res = await priceService.toggleHead(id);
 
-    set((state) => ({
-      priceLines: state.priceLines.map((line) =>
-        line._id === id ? res.priceLine : line
-      ),
-    }));
+      set((state) => ({
+        priceHeaders: state.priceHeaders.map((h) =>
+          h._id === id ? res.priceHead : h
+        ),
+      }));
+      toast.success(res.message);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  },
+  togglePriceLine: async (id: string) => {
+    try {
+      const res = await priceService.toggleLine(id);
+
+      set((state) => ({
+        priceLines: state.priceLines.map((line) =>
+          line._id === id ? res.priceLine : line
+        ),
+      }));
+      toast.success(res.message);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   },
 }));

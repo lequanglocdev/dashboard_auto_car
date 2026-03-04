@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { customerService } from "@/services/customer";
+import { customerRankService, customerService } from "@/services/customer";
 
 import { toast } from "sonner";
 import type Customer from "@/types/customer";
@@ -7,6 +7,7 @@ import type { CustomerState } from "@/types/store";
 
 export const useCustomerStore = create<CustomerState>((set) => ({
   customers: [],
+  customerRanks: [],
   loading: false,
   total: 0,
   page: 1,
@@ -72,7 +73,7 @@ export const useCustomerStore = create<CustomerState>((set) => ({
 
   deleteCustomer: async (id) => {
     try {
-     const res = await customerService.delete(id);
+      const res = await customerService.delete(id);
 
       set((state) => ({
         customers: state.customers.filter((c) => c._id !== id),
@@ -100,6 +101,25 @@ export const useCustomerStore = create<CustomerState>((set) => ({
     } catch (error: any) {
       toast.error(error.message || "Lỗi khi tải khách hàng cùng xe");
       throw error;
+    }
+  },
+  fetchCustomerRank: async (page = 1, limit = 10) => {
+    try {
+      set({ loading: true });
+
+      const data = await customerRankService.getAll(page, limit);
+      console.log("API trả về >>>", data);
+      set({
+        customerRanks: data || [], // ✅ đúng state
+        total: data.total || 0,
+        page,
+        limit,
+        loading: false,
+      });
+    } catch (error: any) {
+      toast.error(error.message || "Lỗi khi tải rank");
+    } finally {
+      set({ loading: false });
     }
   },
 }));

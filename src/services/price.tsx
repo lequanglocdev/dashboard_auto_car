@@ -42,6 +42,10 @@ export const priceService = {
     const res = await api.delete(`/price/line/${id}`);
     return res.data;
   },
+  toggleHead: async (id: string )=> {
+     const res = await api.patch(`/price/head/${id}/toggle`);
+    return res.data;
+  },
   toggleLine: async (id: string) => {
     const res = await api.patch(`/price/line/${id}/toggle`);
     return res.data;

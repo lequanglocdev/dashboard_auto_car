@@ -13,7 +13,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePriceStore } from "@/store/usePriceStore";
-
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -64,7 +63,6 @@ export const AddPriceHeader = () => {
       <DialogTrigger asChild>
         <Button variant="destructive">Thêm bảng giá</Button>
       </DialogTrigger>
-
       <DialogContent className="sm:max-w-sm">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-6">
@@ -72,7 +70,6 @@ export const AddPriceHeader = () => {
               <DialogTitle>Thêm bảng giá</DialogTitle>
             </DialogHeader>
           </div>
-
           <FieldGroup>
             <Field>
               <Label>Tên bảng giá</Label>
@@ -83,7 +80,6 @@ export const AddPriceHeader = () => {
                 </p>
               )}
             </Field>
-
             <Field>
               <Label>Ngày bắt đầu</Label>
               <Input type="date" {...register("start_date")} />
@@ -93,7 +89,6 @@ export const AddPriceHeader = () => {
                 </p>
               )}
             </Field>
-
             <Field>
               <Label>Ngày kết thúc</Label>
               <Input type="date" {...register("end_date")} />
@@ -104,7 +99,6 @@ export const AddPriceHeader = () => {
               )}
             </Field>
           </FieldGroup>
-
           <div className="mt-4">
             <DialogFooter>
               <DialogClose asChild>
@@ -112,7 +106,6 @@ export const AddPriceHeader = () => {
                   Hủy
                 </Button>
               </DialogClose>
-
               <Button type="submit" variant="destructive">
                 Lưu
               </Button>

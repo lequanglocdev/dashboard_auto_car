@@ -1,4 +1,5 @@
 import type Customer from "./customer";
+import type CustomerRank from "./customerRank";
 import type { CreatePriceLine, PriceHeader, PriceLine } from "./price";
 import type { CreatePromotionDetail, CreatePromotionHeader, CreatePromotionLine, PromotionDetail, PromotionHeader, PromotionLine, UpdatePromotionDetail, UpdatePromotionHeader, UpdatePromotionLine } from "./promotion";
 import type Service from "./service";
@@ -25,6 +26,7 @@ export interface AuthState {
 
 export interface CustomerState {
   customers: Customer[];
+  customerRanks: CustomerRank[];
   loading: boolean;
   total: number;
   page: number;
@@ -42,6 +44,7 @@ export interface CustomerState {
   deleteCustomer: (id: string) => Promise<void>;
   getCustomerById: (id: any) => Promise<any>;
   getCustomerByIdWithVehicles: (id: any) => Promise<any>;
+  fetchCustomerRank: (page?: number, litmit?: number) => Promise<void>;
 }
 
 export interface VehicleTypeState {
@@ -133,6 +136,7 @@ export interface PriceState {
   ) => Promise<void>;
   deletePriceLine: (id: string) => Promise<void>;
   togglePriceLine: (id: string) => Promise<void>;
+  togglePriceHead: (id: string) => Promise<void>
 }
 
 export interface PromotionState {

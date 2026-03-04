@@ -108,6 +108,9 @@ const CustomerDetail = () => {
                     <p className="text-sm text-muted-foreground">Địa chỉ</p>
                     <p className="font-medium">{customer.address}</p>
                   </div>
+                  {/* <div>
+                      <p>Cấp bậc</p>
+                  </div> */}
                 </CardContent>
               </Card>
 

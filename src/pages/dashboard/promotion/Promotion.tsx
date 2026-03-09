@@ -17,16 +17,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-
 import { usePromotionStore } from "@/store/usePromotionStore";
-
-import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { AddPromotionHeader } from "./AddPromotionHeader";
 import AddPromotionLineDialog from "./AddPromotionLineDialog";
 import { EditPromotionHeaderDialog } from "./EditPromotionHeaderDialog";
 import { EditPromotionLineDialog } from "./EditPromotionLineDialog";
 import AddPromotionDetailDialog from "./AddPromotionDetail";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontalIcon } from "lucide-react";
+import { EditPromotionDetailDialog } from "./EditPromotionDetailDialog";
 
 const Promotion = () => {
   const {
@@ -39,12 +46,12 @@ const Promotion = () => {
     fetchPromotionDetails,
   } = usePromotionStore();
 
-  console.log(">>promotionheader", promotionHeaders);
   const [activeHeader, setActiveHeader] = useState<string | null>(null);
   const [activeLine, setActiveLine] = useState<string | null>(null);
 
   const [editingHeader, setEditingHeader] = useState<any>(null);
   const [editingLine, setEditingLine] = useState<any>(null);
+  const [editingDetail, setEditingDetail] = useState<any>(null);
 
   const deletePromotionHeader = usePromotionStore(
     (state) => state.deletePromotionHeader
@@ -52,9 +59,7 @@ const Promotion = () => {
   const deletePromotionLine = usePromotionStore(
     (state) => state.deletePromotionLine
   );
-  // const togglePromotionLine = usePromotionStore(
-  //   (state) => state.togglePromotionLine
-  // );
+  const deletePromotionDetail = usePromotionStore((state) => state.deletePromotionDetail)
 
   useEffect(() => {
     fetchPromotionHeaders();
@@ -66,6 +71,10 @@ const Promotion = () => {
   };
 
   const handleOpenLine = async (lineId: string) => {
+    if (activeLine === lineId) {
+      setActiveLine(null);
+      return;
+    }
     setActiveLine(lineId);
     await fetchPromotionDetails(lineId);
   };
@@ -77,29 +86,19 @@ const Promotion = () => {
           <AppSidebar />
           <div className="flex-1 flex flex-col overflow-hidden">
             <Navbar />
-
             <main className="flex-1 max-w-7xl w-full mx-auto overflow-y-auto p-6">
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center">
-                  <span className="mr-4">Tìm kiếm</span>
-                  <Input
-                    className="w-[400px]"
-                    placeholder="Tìm kiếm chương trình"
-                  />
-                </div>
+              <div className="flex items-center justify-end mb-8">
                 <AddPromotionHeader />
               </div>
-
               <div className="bg-destructive/40 p-4 grid grid-cols-7 rounded-md text-sm font-semibold">
-                <h4>MÃ KHUYẾN MÃI</h4>
-                <h4>TÊN KHUYẾN MÃI</h4>
-                <h4>MÔ TẢ</h4>
-                <h4>NGÀY BẮT ĐẦU</h4>
-                <h4>NGÀY KẾT THÚC</h4>
-                <h4>TRẠNG THÁI</h4>
-                <h4 className="text-right">TÁC VỤ</h4>
+                <span>Mã khuyến mãi</span>
+                <span>Tên khuyến mãi</span>
+                <span>Mô tả</span>
+                <span>Ngày bắt đầu</span>
+                <span>Ngày kết thúc</span>
+                <span>Trạng thái</span>
+                <span className="text-right">TÁC VỤ</span>
               </div>
-
               <Accordion
                 type="single"
                 collapsible
@@ -116,54 +115,52 @@ const Promotion = () => {
                         <span className="whitespace-normal break-words max-w-[80px]">
                           {header.description}
                         </span>
-                        <span className="">
+                        <span>
                           {new Date(header.start_date).toLocaleDateString(
                             "vi-VN"
                           )}
                         </span>
-
-                        <span className="">
+                        <span>
                           {new Date(header.end_date).toLocaleDateString(
                             "vi-VN"
                           )}
                         </span>
-
-                        <div className="">
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs ${
-                              header.is_active
-                                ? "bg-green-100 text-green-600"
-                                : "bg-red-100 text-red-600"
-                            }`}>
-                            {header.is_active ? "Hoạt động" : "Không hoạt động"}
-                          </span>
+                        <div className="" onClick={(e) => e.stopPropagation()}>
+                          <Switch checked={header.is_active} />
                         </div>
-
-                        <div className="flex justify-end gap-3 ">
-                          <div onClick={(e) => e.stopPropagation()}>
-                            <AddPromotionLineDialog headerId={header._id} />
-                          </div>
-
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setEditingHeader(header);
-                            }}
-                            className="text-green-500">
-                            Sửa
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deletePromotionHeader(header._id);
-                            }}
-                            className="text-red-500">
-                            Xóa
-                          </button>
-                        </div>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="size-8">
+                                <MoreHorizontalIcon />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <div>
+                                <AddPromotionLineDialog headerId={header._id} />
+                              </div>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => setEditingHeader(header)}>
+                                Sửa
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  deletePromotionHeader(header._id)
+                                }
+                                variant="destructive"
+                                className="text-red-500">
+                                Xóa
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
                       </div>
                     </AccordionTrigger>
-
                     <AccordionContent>
                       {loading ? (
                         <p>Loading...</p>
@@ -173,12 +170,10 @@ const Promotion = () => {
                             <TableRow>
                               <TableHead>Loại giảm giá </TableHead>
                               <TableHead>Mô tả dòng</TableHead>
-                              <TableHead></TableHead>
                               <TableHead>Trạng thái</TableHead>
                               <TableHead>Tác vụ</TableHead>
                             </TableRow>
                           </TableHeader>
-
                           <TableBody>
                             {activeHeader === header._id &&
                             promotionLines.length > 0 ? (
@@ -193,7 +188,6 @@ const Promotion = () => {
                                         : "Cố định"}
                                     </TableCell>
                                     <TableCell>{line.description}</TableCell>
-                                    <TableCell></TableCell>
                                     <TableCell>
                                       <div
                                         className=""
@@ -202,32 +196,41 @@ const Promotion = () => {
                                       </div>
                                     </TableCell>
                                     <TableCell>
-                                      <button
-                                        onClick={(e) => e.stopPropagation()}>
-                                        <AddPromotionDetailDialog
-                                          promotionLineId={line._id}
-                                        />
-                                      </button>
-                                      <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setEditingLine(line);
-                                        }}
-                                        className="text-green-500 px-4">
-                                        Sửa
-                                      </button>
-
-                                      <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          deletePromotionLine(line._id);
-                                        }}
-                                        className="text-red-500">
-                                        Xóa
-                                      </button>
+                                      <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                          <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="size-8">
+                                            <MoreHorizontalIcon />
+                                          </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                          <div>
+                                            <AddPromotionDetailDialog
+                                              promotionLineId={line._id}
+                                            />
+                                          </div>
+                                          <DropdownMenuSeparator />
+                                          <DropdownMenuItem
+                                            onClick={() =>
+                                              setEditingLine(line)
+                                            }>
+                                            Sửa
+                                          </DropdownMenuItem>
+                                          <DropdownMenuSeparator />
+                                          <DropdownMenuItem
+                                            onClick={() =>
+                                              deletePromotionLine(line._id)
+                                            }
+                                            variant="destructive"
+                                            className="text-red-500">
+                                            Xóa
+                                          </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                      </DropdownMenu>
                                     </TableCell>
                                   </TableRow>
-
                                   {/* DETAIL TABLE */}
                                   {activeLine === line._id && (
                                     <TableRow>
@@ -246,7 +249,6 @@ const Promotion = () => {
                                               <TableHead>Tác vụ</TableHead>
                                             </TableRow>
                                           </TableHeader>
-
                                           <TableBody>
                                             {promotionDetails.length > 0 ? (
                                               promotionDetails.map((detail) => (
@@ -257,36 +259,58 @@ const Promotion = () => {
                                                         ?.rank_name
                                                     }
                                                   </TableCell>
-
                                                   <TableCell>
                                                     {detail.discount_value}
                                                   </TableCell>
-
                                                   <TableCell>
                                                     {detail.min_order_value}
                                                   </TableCell>
-
                                                   <TableCell>
                                                     <Switch
                                                       checked={detail.is_active}
                                                     />
                                                   </TableCell>
                                                   <TableCell>
-                                                    <button
-                                                      onClick={(e) => {
-                                                        e.stopPropagation();
-                                                      }}
-                                                      className="text-green-500 px-4">
-                                                      Sửa
-                                                    </button>
-
-                                                    <button
-                                                      onClick={(e) => {
-                                                        e.stopPropagation();
-                                                      }}
-                                                      className="text-red-500">
-                                                      Xóa
-                                                    </button>
+                                                    <DropdownMenu>
+                                                      <DropdownMenuTrigger
+                                                        asChild>
+                                                        <Button
+                                                          variant="ghost"
+                                                          size="icon"
+                                                          className="size-8">
+                                                          <MoreHorizontalIcon />
+                                                        </Button>
+                                                      </DropdownMenuTrigger>
+                                                      <DropdownMenuContent align="end">
+                                                        <div>
+                                                          <AddPromotionDetailDialog
+                                                            promotionLineId={
+                                                              line._id
+                                                            }
+                                                          />
+                                                        </div>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                          onClick={() =>
+                                                            setEditingDetail(
+                                                              detail
+                                                            )
+                                                          }>
+                                                          Sửa
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                          onClick={() =>
+                                                            deletePromotionDetail(
+                                                              detail._id
+                                                            )
+                                                          }
+                                                          variant="destructive"
+                                                          className="text-red-500">
+                                                          Xóa
+                                                        </DropdownMenuItem>
+                                                      </DropdownMenuContent>
+                                                    </DropdownMenu>
                                                   </TableCell>
                                                 </TableRow>
                                               ))
@@ -332,6 +356,11 @@ const Promotion = () => {
           open={!!editingLine}
           setOpen={() => setEditingLine(null)}
           line={editingLine}
+        />
+        <EditPromotionDetailDialog
+          open={!!editingDetail}
+          setOpen={() => setEditingDetail(null)}
+          detail={editingDetail}
         />
       </SidebarProvider>
     </ThemeProvider>

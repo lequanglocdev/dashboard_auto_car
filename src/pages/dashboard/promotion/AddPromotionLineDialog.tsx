@@ -59,11 +59,11 @@ const AddPromotionLineDialog = ({ headerId }: Props) => {
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <button
+          <h4
             onClick={(e) => e.stopPropagation()}
-            className="text-green-500">
-            Thêm
-          </button>
+            className="text-sm ml-1 py-1 cursor-pointer">
+            Thêm dòng khuyến mãi
+          </h4>
         </DialogTrigger>
         <DialogContent>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -89,10 +89,7 @@ const AddPromotionLineDialog = ({ headerId }: Props) => {
               </Field>
               <Field>
                 <Label className="py-4">Mô tả</Label>
-                <Input
-                  type="text"
-                  {...register("description")}
-                />
+                <Input type="text" {...register("description")} />
                 {errors.description && (
                   <p className="text-red-500 text-sm">
                     {errors.description.message}

@@ -59,9 +59,16 @@ export interface PopulatedRank {
   rank_name: string;
 }
 
+export interface PopulatedService {
+  _id: string;
+  name: string;
+}
+
+
 export interface PromotionDetail extends BaseEntity {
   promotion_line_id: string;
   applicable_rank_id: PopulatedRank;
+  service_id: PopulatedService;
   discount_value: number;
   min_order_value: number;
 }
@@ -72,6 +79,11 @@ export type CreatePromotionDetail = {
   min_order_value: number;
 };
 
-export type UpdatePromotionDetail = Partial<
-  Omit<PromotionDetail, "_id" | "promotion_line_id">
->;
+export type UpdatePromotionDetail = Partial<{
+  applicable_rank_id: string;
+  service_id: string;
+  discount_value: number;
+  min_order_value: number;
+  is_active: boolean;
+}>;
+

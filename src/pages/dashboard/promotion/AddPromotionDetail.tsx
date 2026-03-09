@@ -72,9 +72,11 @@ const AddPromotionDetailDialog = ({ promotionLineId }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button onClick={(e) => e.stopPropagation()} className="text-green-500">
-          Thêm detail
-        </button>
+        <h4
+          onClick={(e) => e.stopPropagation()}
+          className="text-sm ml-1 py-1 cursor-pointer">
+          Thêm chi tiết khuyến mãi
+        </h4>
       </DialogTrigger>
 
       <DialogContent>

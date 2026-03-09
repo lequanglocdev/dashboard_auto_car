@@ -77,11 +77,11 @@ const Price = () => {
                 <AddPriceHeader />
               </div>
               <div className="bg-destructive/40 p-4 grid grid-cols-5 rounded-md text-sm font-semibold">
-                <span>TÊN BẢNG GIÁ</span>
-                <span>NGÀY BẮT ĐẦU</span>
-                <span>NGÀY KẾT THÚC</span>
-                <span>TRẠNG THÁI</span>
-                <span className="text-right">TÁC VỤ</span>
+                <span>Tên bảng giá</span>
+                <span>Ngày bắt đầu</span>
+                <span>Ngày kết thúc</span>
+                <span>Trạng thái</span>
+                <span className="text-right">Tác vụ</span>
               </div>
               <Accordion
                 type="single"

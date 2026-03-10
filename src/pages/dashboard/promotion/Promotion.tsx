@@ -61,6 +61,14 @@ const Promotion = () => {
   );
   const deletePromotionDetail = usePromotionStore((state) => state.deletePromotionDetail)
 
+  const togglePromotionHeder = usePromotionStore((state) => state.togglePromotionHead);
+
+  const togglePromotionLine = usePromotionStore((state)=> state.togglePromotionLine);
+
+   const togglePromotionDetail = usePromotionStore(
+     (state) => state.togglePromotionDetail
+   );
+
   useEffect(() => {
     fetchPromotionHeaders();
   }, []);
@@ -90,7 +98,7 @@ const Promotion = () => {
               <div className="flex items-center justify-end mb-8">
                 <AddPromotionHeader />
               </div>
-              <div className="bg-destructive/40 p-4 grid grid-cols-7 rounded-md text-sm font-semibold">
+              <div className="bg-destructive/40 p-3 grid grid-cols-7 rounded-md text-sm font-semibold">
                 <span>Mã khuyến mãi</span>
                 <span>Tên khuyến mãi</span>
                 <span>Mô tả</span>
@@ -126,7 +134,12 @@ const Promotion = () => {
                           )}
                         </span>
                         <div className="" onClick={(e) => e.stopPropagation()}>
-                          <Switch checked={header.is_active} />
+                          <Switch
+                            checked={header.is_active}
+                            onCheckedChange={() =>
+                              togglePromotionHeder(header._id)
+                            }
+                          />
                         </div>
                         <TableCell className="text-right">
                           <DropdownMenu>
@@ -192,7 +205,12 @@ const Promotion = () => {
                                       <div
                                         className=""
                                         onClick={(e) => e.stopPropagation()}>
-                                        <Switch checked={line.is_active} />
+                                        <Switch
+                                          checked={line.is_active}
+                                          onCheckedChange={() =>
+                                            togglePromotionLine(line._id)
+                                          }
+                                        />
                                       </div>
                                     </TableCell>
                                     <TableCell>
@@ -268,6 +286,11 @@ const Promotion = () => {
                                                   <TableCell>
                                                     <Switch
                                                       checked={detail.is_active}
+                                                      onCheckedChange={() =>
+                                                        togglePromotionDetail(
+                                                          detail._id
+                                                        )
+                                                      }
                                                     />
                                                   </TableCell>
                                                   <TableCell>

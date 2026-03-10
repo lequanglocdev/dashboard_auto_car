@@ -1,3 +1,4 @@
+
 // stores/usePromotionStore.ts
 
 import { create } from "zustand";
@@ -184,5 +185,46 @@ export const usePromotionStore = create<PromotionState>((set) => ({
       toast.error(error?.response?.data?.message || "Xóa chi tiết thất bại");
     }
   },
-}));
+  togglePromotionHead: async (id: string) => {
+    try {
+      const res = await promotionService.toggleHead(id);
 
+      set((state) => ({
+        promotionHeaders: state.promotionHeaders.map((h) =>
+          h._id === id ? res.promotionHead : h
+        ),
+      }));
+      toast.success(res.message);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  },
+  togglePromotionLine: async (id: string) => {
+    try {
+      const res = await promotionService.toggleLine(id);
+
+      set((state) => ({
+        promotionLines: state.promotionLines.map((h) =>
+          h._id === id ? res.promotionLine : h
+        ),
+      }));
+      toast.success(res.message);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  },
+  togglePromotionDetail: async (id: string) => {
+    try {
+      const res = await promotionService.toggleDetail(id);
+
+      set((state) => ({
+        promotionDetails: state.promotionDetails.map((h) =>
+          h._id === id ? res.promotionDetail : h
+        ),
+      }));
+      toast.success(res.message);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  },
+}));

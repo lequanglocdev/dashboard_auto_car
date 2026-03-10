@@ -175,4 +175,7 @@ export interface PromotionState {
     data: UpdatePromotionDetail
   ) => Promise<void>;
   deletePromotionDetail: (id: string) => Promise<void>;
+  togglePromotionHead: (id: string) => Promise<void>;
+  togglePromotionLine: (id: string) => Promise<void>;
+  togglePromotionDetail: (id: string) => Promise<void>;
 }

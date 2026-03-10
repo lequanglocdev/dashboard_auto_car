@@ -19,7 +19,7 @@ export const promotionService = {
   },
 
   addHeader: async (data: CreatePromotionHeader) => {
-    const res = await api.post("/promotion", data); 
+    const res = await api.post("/promotion", data);
     return res.data;
   },
 
@@ -77,6 +77,18 @@ export const promotionService = {
 
   deleteDetail: async (id: string) => {
     const res = await api.delete(`/promotion/detail/${id}`);
+    return res.data;
+  },
+  toggleHead: async (id: string) => {
+    const res = await api.patch(`/promotion/head/${id}/toggle`);
+    return res.data;
+  },
+  toggleLine: async (id: string) => {
+    const res = await api.patch(`/promotion/line/${id}/toggle`);
+    return res.data;
+  },
+  toggleDetail: async (id: string) => {
+    const res = await api.patch(`/promotion/detail/${id}/toggle`);
     return res.data;
   },
 };

@@ -62,7 +62,7 @@ const Vehicle = () => {
             <Navbar />
 
             <main className="flex-1 max-w-7xl w-full mx-auto overflow-y-auto p-6">
-              <div className="flex justify-end items-end">
+              <div className="flex justify-end items-end mb-8">
                 <AddVehicle />
               </div>
               <div>

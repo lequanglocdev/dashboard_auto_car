@@ -1,5 +1,6 @@
 import api from "@/lib/axios";
 import type Customer from "@/types/customer";
+import type Vehicle from "@/types/vehicle";
 
 
 export const customerService = {
@@ -41,7 +42,15 @@ export const customerService = {
       withCredentials: true,
     });
     return res.data;
-  }
+  },
+ findByContact: async (query: string): Promise<{ customer: Customer; vehicles: Vehicle[] }> => {
+  const isPhone = /^[0-9]+$/.test(query.trim());
+  const param = isPhone ? { phone_number: query.trim() } : { email: query.trim() };
+  
+  const res = await api.get('/customers/find', { params: param });
+  return res.data;
+
+},
 };
 
 

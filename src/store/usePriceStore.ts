@@ -152,4 +152,14 @@ export const usePriceStore = create<PriceState>((set) => ({
       toast.error(error.message);
     }
   },
+  fetchPriceLinesByVehicleType: async (vehicleTypeId) => {
+    try {
+      set({ loading: true });
+      const data = await priceService.getLinesByVehicleType(vehicleTypeId);
+      set({ priceLines: data, loading: false });
+    } catch (error: any) {
+      toast.error(error.message);
+      set({ loading: false });
+    }
+  },
 }));

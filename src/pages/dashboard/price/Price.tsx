@@ -164,7 +164,7 @@ const Price = () => {
                             priceLines.length > 0 ? (
                               priceLines.map((line) => (
                                 <TableRow key={line._id}>
-                                  <TableCell>{line.service_id?.name}</TableCell>
+                                  <TableCell >{line.service_id?.name}</TableCell>
                                   <TableCell>
                                     {line.vehicle_type_id?.vehicle_type_name}
                                   </TableCell>

@@ -7,6 +7,8 @@ import type User from "./user";
 import type { CreateVehicle } from "./vehicle";
 import type Vehicle from "./vehicle";
 import type VehicleType from "./vehicle-type";
+import type Slot from "./slot";
+import type { Appointment, AppointmentFormData } from "./appointment";
 
 export interface AuthState {
   accessToken: string | null;
@@ -45,6 +47,9 @@ export interface CustomerState {
   getCustomerById: (id: any) => Promise<any>;
   getCustomerByIdWithVehicles: (id: any) => Promise<any>;
   fetchCustomerRank: (page?: number, litmit?: number) => Promise<void>;
+  findByContact: (
+    query: string
+  ) => Promise<{ customer: Customer; vehicles: Vehicle[] }>;
 }
 
 export interface VehicleTypeState {
@@ -136,7 +141,8 @@ export interface PriceState {
   ) => Promise<void>;
   deletePriceLine: (id: string) => Promise<void>;
   togglePriceLine: (id: string) => Promise<void>;
-  togglePriceHead: (id: string) => Promise<void>
+  togglePriceHead: (id: string) => Promise<void>;
+  fetchPriceLinesByVehicleType: (vehicleTypeId: string) => Promise<void>;
 }
 
 export interface PromotionState {
@@ -178,4 +184,52 @@ export interface PromotionState {
   togglePromotionHead: (id: string) => Promise<void>;
   togglePromotionLine: (id: string) => Promise<void>;
   togglePromotionDetail: (id: string) => Promise<void>;
+}
+
+export interface SlotsState {
+  slots: Slot[];
+  loading: boolean;
+  total: number;
+  page: number;
+  limit: number;
+  error: string | null;
+  fetchSlots: (page?: number, limit?: number) => Promise<void>;
+  addSlot: (slotData: {
+    start_time: string;
+    capacity?: number;
+  }) => Promise<void>;
+  updateSlot: (
+    id: string,
+    slotData: Partial<
+      Omit<Slot, "_id" | "created_at" | "updated_at" | "is_deleted">
+    >
+  ) => Promise<void>;
+  deleteSlot: (id: string) => Promise<void>;
+}
+
+// types/store.ts — thêm vào cuối
+export interface AppointmentsState {
+  appointments: Appointment[];
+  selectedAppointment: Appointment | null;
+  preselectedSlotId: string | null;
+  isModalOpen: boolean;
+  isLoading: boolean;
+  error: string | null;
+
+  fetchAppointments: (params?: {
+    date?: string;
+    status?: string;
+    license_plate?: string;
+    customer_name?: string;
+    phone_number?: string;
+  }) => Promise<void>;
+  getAppointmentById: (id: string) => Promise<void>;
+  createAppointment: (data: AppointmentFormData) => Promise<void>;
+  cancelAppointment: (id: string) => Promise<void>;
+  arriveAppointment: (id: string) => Promise<void>;
+  completeAppointment: (id: string) => Promise<void>;
+  toggleServiceDone: (appointmentServiceId: string) => Promise<void>;
+
+  openModal: (appointment?: Appointment, slotId?: string) => void;
+  closeModal: () => void;
 }

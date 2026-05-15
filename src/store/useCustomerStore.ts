@@ -122,4 +122,7 @@ export const useCustomerStore = create<CustomerState>((set) => ({
       set({ loading: false });
     }
   },
+  findByContact: async (query) => {
+    return await customerService.findByContact(query);
+  },
 }));

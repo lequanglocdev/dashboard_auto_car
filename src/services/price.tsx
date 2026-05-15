@@ -42,12 +42,16 @@ export const priceService = {
     const res = await api.delete(`/price/line/${id}`);
     return res.data;
   },
-  toggleHead: async (id: string )=> {
-     const res = await api.patch(`/price/head/${id}/toggle`);
+  toggleHead: async (id: string) => {
+    const res = await api.patch(`/price/head/${id}/toggle`);
     return res.data;
   },
   toggleLine: async (id: string) => {
     const res = await api.patch(`/price/line/${id}/toggle`);
+    return res.data;
+  },
+  getLinesByVehicleType: async (vehicleTypeId: string) => {
+    const res = await api.get(`/price/vehicle-type/${vehicleTypeId}`);
     return res.data;
   },
 };

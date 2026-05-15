@@ -122,14 +122,20 @@ const Customer = () => {
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
                                 <DropdownMenuItem
-                                  onClick={() => setEditingCustomer(customer)}>
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setEditingCustomer(customer);
+                                  }}>
                                   Sửa
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                   variant="destructive"
                                   className="text-red-500"
-                                  onClick={() => deleteCustomer(customer._id)}>
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteCustomer(customer._id);
+                                  }}>
                                   Xóa
                                 </DropdownMenuItem>
                               </DropdownMenuContent>

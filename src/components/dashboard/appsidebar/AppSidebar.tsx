@@ -35,7 +35,7 @@ import { useNavigate } from "react-router-dom";
 const items = [
   {
     title: "Đặt lịch",
-    url: "/admin",
+    url: "/ ",
     icon: Home,
   },
 

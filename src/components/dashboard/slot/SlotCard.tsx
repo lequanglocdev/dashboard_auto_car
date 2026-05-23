@@ -103,7 +103,7 @@ export function SlotCard({ slot, onComplete, onView }: SlotCardProps) {
           </>
         ) : (
           <button
-            onClick={() => openModal()}
+            onClick={() => openModal(undefined, slot._id)}
             className="flex-1 py-2.5 bg-cyan-600 text-white font-semibold text-sm hover:bg-cyan-500 transition">
             Đặt dịch vụ
           </button>

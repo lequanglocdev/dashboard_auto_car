@@ -1,24 +1,27 @@
 // pages/dashboard/appointment/AppointmentModal.tsx
-import {useState} from 'react';
-import { toast } from 'sonner';
-import { useAppointmentStore } from '@/store/useAppointmentStore';
-import { useCustomerStore } from '@/store/useCustomerStore';   // store có sẵn
-import { usePriceStore } from '@/store/usePriceStore';         // store có sẵn
-import type Vehicle from '@/types/vehicle';
-import type { PriceLine } from '@/types/price';
-import { CircleFadingPlus } from 'lucide-react';
-import { useSlotsStore } from '@/store/slotStore';
+import { useState } from "react";
+import { toast } from "sonner";
+import { useAppointmentStore } from "@/store/useAppointmentStore";
+import { useCustomerStore } from "@/store/useCustomerStore"; // store có sẵn
+import { usePriceStore } from "@/store/usePriceStore"; // store có sẵn
+import type Vehicle from "@/types/vehicle";
+import type { PriceLine } from "@/types/price";
+import { CircleFadingPlus } from "lucide-react";
+import { useSlotsStore } from "@/store/slotStore";
 
 export default function AppointmentModal() {
-  const { isModalOpen, preselectedSlotId, closeModal, createAppointment } = useAppointmentStore();
+  const { isModalOpen, preselectedSlotId, closeModal, createAppointment } =
+    useAppointmentStore();
   const { findByContact } = useCustomerStore();
   const { fetchSlots } = useSlotsStore();
   // ── dùng store có sẵn ──────────────────────────────────
- const { priceLines, fetchPriceLinesByVehicleType } = usePriceStore();
+  const { priceLines, fetchPriceLinesByVehicleType } = usePriceStore();
 
   // ── local state ────────────────────────────────────────
-  const [query, setQuery] = useState('');
-  const [customerData, setCustomerData] = useState<Awaited<ReturnType<typeof getCustomerByIdWithVehicles>> | null>(null);
+  const [query, setQuery] = useState("");
+  const [customerData, setCustomerData] = useState<Awaited<
+    ReturnType<typeof getCustomerByIdWithVehicles>
+  > | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [selectedServices, setSelectedServices] = useState<PriceLine[]>([]);
 
@@ -26,7 +29,10 @@ export default function AppointmentModal() {
     (s) => !selectedServices.find((ss) => ss._id === s._id)
   );
 
-  const totalTime = selectedServices.reduce((acc, s) => acc + (s as any).time_required, 0);
+  const totalTime = selectedServices.reduce(
+    (acc, s) => acc + ((s as any).service_id?.time_required ?? 0),
+    0
+  );
   const totalCost = selectedServices.reduce((acc, s) => acc + s.price, 0);
 
   if (!isModalOpen) return null;
@@ -35,7 +41,7 @@ export default function AppointmentModal() {
 
   const handleClose = () => {
     closeModal();
-    setQuery('');
+    setQuery("");
     setCustomerData(null);
     setSelectedVehicle(null);
     setSelectedServices([]);
@@ -216,10 +222,10 @@ export default function AppointmentModal() {
                         key={s._id}
                         className="border-t border-border hover:bg-muted/30">
                         <td className="px-3 py-2">
-                          {(s as any).service_name ?? s._id}
+                          {(s as any).service_id?.name ?? ""}
                         </td>
                         <td className="px-3 py-2">
-                          {(s as any).time_required} phút
+                          (s as any).service_id?.time_required
                         </td>
                         <td className="px-3 py-2">
                           {s.price.toLocaleString("vi-VN")} đ
@@ -258,7 +264,7 @@ export default function AppointmentModal() {
                           {(s as any).service_name ?? s._id}
                         </td>
                         <td className="px-3 py-2">
-                          {(s as any).time_required} phút
+                          {(s as any).service_id?.time_required} phút
                         </td>
                         <td className="px-3 py-2">
                           {s.price.toLocaleString("vi-VN")} đ

@@ -35,7 +35,7 @@ import { useNavigate } from "react-router-dom";
 const items = [
   {
     title: "Đặt lịch",
-    url: "/ ",
+    url: "/admin",
     icon: Home,
   },
 
@@ -72,7 +72,7 @@ const items = [
 ];
 
 const AppSidebar = () => {
-  const {user} = useAuthStore()
+  const { user } = useAuthStore()
   const navigate = useNavigate()
   return (
     <Sidebar collapsible="icon">

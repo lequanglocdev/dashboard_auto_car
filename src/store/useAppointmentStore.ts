@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { toast } from "sonner";
 import { appointmentService } from "@/services/appointmentService";
 import type { AppointmentsState } from "@/types/store";
-import { useSlotsStore } from "@/store/slotStore";
 export const useAppointmentStore = create<AppointmentsState>((set) => ({
   appointments: [],
   selectedAppointment: null,
@@ -39,23 +38,18 @@ export const useAppointmentStore = create<AppointmentsState>((set) => ({
 
   createAppointment: async (data) => {
     set({ isLoading: true, error: null });
-    try {
-      const created = await appointmentService.create(data);
-      set((s) => ({
-        appointments: [created, ...s.appointments],
-        isModalOpen: false,
-      }));
-      toast.success("Đặt lịch thành công!");
-
-      // fetch lại slots để cập nhật trạng thái
-      await useSlotsStore.getState().fetchSlots(1, 10);
-    } catch (e: any) {
-      set({ error: e.message });
-      toast.error(e.message);
-      throw e;
-    } finally {
-      set({ isLoading: false });
-    }
+     try {
+       const created = await appointmentService.create(data);
+       set((s) => ({ appointments: [created.appointment, ...s.appointments] }));
+       toast.success("Đặt lịch thành công!");
+       return created; // ← thêm return
+     } catch (e: any) {
+       set({ error: e.message });
+       toast.error(e.message);
+       throw e;
+     } finally {
+       set({ isLoading: false });
+     }
   },
 
   cancelAppointment: async (id) => {

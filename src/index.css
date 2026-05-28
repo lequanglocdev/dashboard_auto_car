@@ -156,3 +156,14 @@ h1 {
     @apply bg-background text-foreground;
   }
 }
+
+@media print {
+  /* Ẩn toàn bộ UI */
+  body > * {
+    display: none !important;
+  }
+  /* Chỉ hiện invoice print */
+  #invoice-print {
+    display: block !important;
+  }
+}

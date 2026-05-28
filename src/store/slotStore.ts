@@ -42,7 +42,6 @@ export const useSlotsStore = create<SlotsState>((set) => ({
         _id: newSlot._id,
         start_time: newSlot.start_time,
         status: newSlot.status,
-        capacity: newSlot.capacity,
         is_deleted: newSlot.is_deleted,
         created_at: newSlot.created_at,
         updated_at: newSlot.updated_at,
@@ -84,5 +83,12 @@ export const useSlotsStore = create<SlotsState>((set) => ({
       toast.error(error.message);
       throw error;
     }
+  },
+  updateSlotLocally: (slotId: string, updates: Partial<Slot>) => {
+    set((state) => ({
+      slots: state.slots.map((s) =>
+        s._id === slotId ? { ...s, ...updates } : s
+      ),
+    }));
   },
 }));

@@ -13,22 +13,19 @@ export default function AppointmentModal() {
   const { isModalOpen, preselectedSlotId, closeModal, createAppointment } =
     useAppointmentStore();
   const { findByContact } = useCustomerStore();
-  const { fetchSlots } = useSlotsStore();
-  // ── dùng store có sẵn ──────────────────────────────────
+  const { updateSlotLocally } = useSlotsStore();
   const { priceLines, fetchPriceLinesByVehicleType } = usePriceStore();
 
-  // ── local state ────────────────────────────────────────
   const [query, setQuery] = useState("");
-  const [customerData, setCustomerData] = useState<Awaited<
-    ReturnType<typeof getCustomerByIdWithVehicles>
-  > | null>(null);
+  type CustomerWithVehicles = Awaited<ReturnType<typeof findByContact>>;
+  const [customerData, setCustomerData] = useState<CustomerWithVehicles | null>(null);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [selectedServices, setSelectedServices] = useState<PriceLine[]>([]);
-
+  
+  
   const availableServices = priceLines.filter(
     (s) => !selectedServices.find((ss) => ss._id === s._id)
   );
-
   const totalTime = selectedServices.reduce(
     (acc, s) => acc + ((s as any).service_id?.time_required ?? 0),
     0
@@ -85,19 +82,35 @@ export default function AppointmentModal() {
       return;
     }
     try {
-      await createAppointment({
-        slot_id: preselectedSlotId ?? null,
+      const result = await createAppointment({
+        slot_id: preselectedSlotId ?? "",
         vehicle_id: selectedVehicle._id,
         service_ids: selectedServices.map((s) => (s as any).service_id?._id),
         appointment_datetime: new Date().toISOString(),
       });
-      await fetchSlots(1, 10); // ← fetch lại sau khi đặt thành công
+
+      // Chỉ update đúng slot vừa book, không fetch lại tất cả
+      if (preselectedSlotId) {
+        updateSlotLocally(preselectedSlotId, {
+          status: "booked",
+          booking: {
+            name: customerData.customer.name,
+            phone: customerData.customer.phone_number,
+            duration: totalTime,
+            booked_at: new Date().toISOString(),
+            appointment_id: result.appointment._id,
+            vehicle: `${(selectedVehicle as any).manufacturer} - ${
+              selectedVehicle.license_plate
+            }`,
+          },
+        });
+      }
+
       handleClose();
     } catch {
-      // error đã được toast trong store
+      // error đã toast trong store
     }
   };
-
   // ── render ─────────────────────────────────────────────
 
   return (
@@ -155,18 +168,10 @@ export default function AppointmentModal() {
                 <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">
                   Khách hàng
                 </p>
-                <p className="text-sm font-medium">
+                <p className="text-sm mt-5 font-medium">
                   {customerData.customer.name}
                 </p>
-                <p className="text-sm text-muted-foreground">
-                  {customerData.customer.phone_number}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {customerData.customer.email}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {customerData.customer.address}
-                </p>
+                
               </div>
               <div>
                 <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">
@@ -225,7 +230,7 @@ export default function AppointmentModal() {
                           {(s as any).service_id?.name ?? ""}
                         </td>
                         <td className="px-3 py-2">
-                          (s as any).service_id?.time_required
+                          {(s as any).service_id?.time_required} phút
                         </td>
                         <td className="px-3 py-2">
                           {s.price.toLocaleString("vi-VN")} đ
@@ -261,7 +266,7 @@ export default function AppointmentModal() {
                     {selectedServices.map((s) => (
                       <tr key={s._id} className="border-t border-border">
                         <td className="px-3 py-2">
-                          {(s as any).service_name ?? s._id}
+                          {(s as any).service_id?.name ?? ""}
                         </td>
                         <td className="px-3 py-2">
                           {(s as any).service_id?.time_required} phút

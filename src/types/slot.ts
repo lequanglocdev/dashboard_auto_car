@@ -4,6 +4,8 @@ export default interface Slot {
   start_time: string;
   status: "available" | "booked";
   is_deleted: boolean;
+  created_at: string;
+  updated_at: string;
   booking?: {
     name: string;
     phone: string;

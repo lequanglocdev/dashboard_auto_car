@@ -2,7 +2,7 @@
 import { useAppointmentStore } from "@/store/useAppointmentStore";
 import type Slot from "@/types/slot";
 import { Car} from "lucide-react";
-
+import { memo } from "react";
 interface Booking {
   duration: number;
   booked_at: string;
@@ -13,11 +13,10 @@ interface Booking {
 interface SlotCardProps {
   slot: Slot & { booking?: Booking };
   onBook?: (id: string) => void;
-  onComplete?: (id: string) => void;
   onView?: (id: string) => void;
 }
 
-export function SlotCard({ slot, onComplete, onView }: SlotCardProps) {
+export const SlotCard = memo(({ slot, onView }: SlotCardProps) => {
   const isBooked = slot.status === "booked";
   const { openModal } = useAppointmentStore();
   const formatVN = (isoString: string) => {
@@ -91,11 +90,6 @@ export function SlotCard({ slot, onComplete, onView }: SlotCardProps) {
         {isBooked ? (
           <>
             <button
-              onClick={() => onComplete?.(slot._id)}
-              className="w-full py-2.5 bg-rose-700 text-white font-semibold text-sm hover:bg-rose-600 transition">
-              Hoàn tất chăm sóc
-            </button>
-            <button
               onClick={() => onView?.(slot._id)}
               className="w-full py-2.5 bg-rose-900 text-white font-semibold text-sm hover:bg-rose-800 border-l border-rose-600 transition">
               Xem
@@ -111,4 +105,4 @@ export function SlotCard({ slot, onComplete, onView }: SlotCardProps) {
       </div>
     </div>
   );
-}
+});

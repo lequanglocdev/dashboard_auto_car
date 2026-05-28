@@ -32,3 +32,13 @@ export interface AppointmentFormData {
   service_ids: string[];           // service_id list — backend tự tìm priceLine
   appointment_datetime: string;
 }
+
+export interface CreateAppointmentResponse {
+  appointment: Appointment;
+  slot: {
+    _id: string;
+    start_time: string;
+    status: string;
+  };
+  total_time: number;
+}

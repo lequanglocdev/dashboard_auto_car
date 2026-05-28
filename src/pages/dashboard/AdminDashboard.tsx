@@ -2,7 +2,7 @@ import { SidebarProvider } from "@/components/ui/Sidebar";
 import Navbar from "@/components/dashboard/navbar/Navbar";
 import AppSidebar from "@/components/dashboard/appsidebar/AppSidebar";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { SlotList } from "@/components/dashboard/slot/SlotList";
+import { SlotList } from "@/pages/dashboard/slot/SlotList";
 const AdminDashboard = () => {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">

@@ -1,14 +1,26 @@
-import { useEffect } from "react";
+// components/SlotList.tsx
+import { useEffect, useState } from "react";
 import { SlotCard } from "./SlotCard";
 import { useSlotsStore } from "@/store/slotStore";
 import AppointmentModal from "@/pages/dashboard/appointment/AppointmentModal";
+import { ServiceProgressModal } from "./ServiceProgressModal";
 
 export function SlotList() {
   const { slots, loading, fetchSlots } = useSlotsStore();
 
+  const [viewingAppointmentId, setViewingAppointmentId] = useState<
+    string | null
+  >(null);
+
   useEffect(() => {
     fetchSlots(1, 10);
   }, []);
+
+  const handleView = (slotId: string) => {
+    const slot = slots.find((s) => s._id === slotId);
+    const appointmentId = slot?.booking?.appointment_id ?? null;
+    setViewingAppointmentId(appointmentId);
+  };
 
   if (loading) {
     return (
@@ -19,7 +31,6 @@ export function SlotList() {
       </div>
     );
   }
-
   return (
     <div>
       <h2 className="text-center text-xl font-bold italic text-red-500 mb-4">
@@ -30,13 +41,15 @@ export function SlotList() {
           <SlotCard
             key={slot._id}
             slot={slot}
-            onBook={(id) => console.log("book", id)}
-            onComplete={(id) => console.log("complete", id)}
-            onView={(id) => console.log("view", id)}
+            onView={handleView}
           />
         ))}
       </div>
       <AppointmentModal />
+      <ServiceProgressModal
+        appointmentId={viewingAppointmentId}
+        onClose={() => setViewingAppointmentId(null)}
+      />
     </div>
   );
 }

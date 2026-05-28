@@ -8,7 +8,8 @@ import type { CreateVehicle } from "./vehicle";
 import type Vehicle from "./vehicle";
 import type VehicleType from "./vehicle-type";
 import type Slot from "./slot";
-import type { Appointment, AppointmentFormData } from "./appointment";
+import type { Appointment, AppointmentFormData, CreateAppointmentResponse } from "./appointment";
+import type { Invoice } from "./invoice";
 
 export interface AuthState {
   accessToken: string | null;
@@ -196,7 +197,6 @@ export interface SlotsState {
   fetchSlots: (page?: number, limit?: number) => Promise<void>;
   addSlot: (slotData: {
     start_time: string;
-    capacity?: number;
   }) => Promise<void>;
   updateSlot: (
     id: string,
@@ -205,6 +205,7 @@ export interface SlotsState {
     >
   ) => Promise<void>;
   deleteSlot: (id: string) => Promise<void>;
+  updateSlotLocally: (slotId: string, updates: Partial<Slot>) => void;
 }
 
 // types/store.ts — thêm vào cuối
@@ -224,7 +225,10 @@ export interface AppointmentsState {
     phone_number?: string;
   }) => Promise<void>;
   getAppointmentById: (id: string) => Promise<void>;
-  createAppointment: (data: AppointmentFormData) => Promise<void>;
+  // types/store.ts
+  createAppointment: (
+    data: AppointmentFormData
+  ) => Promise<CreateAppointmentResponse>;
   cancelAppointment: (id: string) => Promise<void>;
   arriveAppointment: (id: string) => Promise<void>;
   completeAppointment: (id: string) => Promise<void>;
@@ -232,4 +236,18 @@ export interface AppointmentsState {
 
   openModal: (appointment?: Appointment, slotId?: string) => void;
   closeModal: () => void;
+}
+
+export interface InvoiceState {
+  invoices: Invoice[];
+  invoice: Invoice | null;
+  isLoading: boolean;
+
+  fetchInvoices: (params?: { status?: string; date?: string }) => Promise<void>;
+  generateInvoice: (appointmentId: string) => Promise<void>;
+  getInvoice: (invoiceId: string) => Promise<void>;
+  payDirectly: (invoiceId: string) => Promise<void>;
+  createPaymentLink: (invoiceId: string) => Promise<string>;
+  refund: (invoiceId: string, note?: string) => Promise<void>;
+  clearInvoice: () => void;
 }

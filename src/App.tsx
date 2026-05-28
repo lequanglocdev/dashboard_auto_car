@@ -16,6 +16,9 @@ import Promotion from "./pages/dashboard/promotion/Promotion";
 import Invoice from "./pages/dashboard/invoice/Invoice";
 import Vehicle from "./pages/dashboard/vehicleType/Vehicle";
 import CustomerDetail from "./pages/dashboard/customer/CustomerDetail";
+import InvoiceDetail from "./pages/dashboard/invoice/InvoiceDetail";
+import PaymentSuccess from "./pages/dashboard/payment/PaymentSuccess";
+import PaymentCancel from "./pages/dashboard/payment/PaymentCancel";
 
 function App() {
   const { accessToken, fetchMe } = useAuthStore();
@@ -43,11 +46,16 @@ function App() {
           <Route element={<AdminRoute />}>
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/customer" element={<Customer />} />
-            <Route path="/customer/:id" element={<CustomerDetail  />} />
+            <Route path="/customer/:id" element={<CustomerDetail />} />
             <Route path="/vehicle-type" element={<Vehicle />} />
             <Route path="/service" element={<Service />} />
             <Route path="/price" element={<Price />} />
             <Route path="/invoice" element={<Invoice />} />
+            <Route path="/invoice/:id" element={<InvoiceDetail />} />
+            {/* appointmentId đi qua query param: /invoice/new?appointmentId=xxx */}
+            <Route path="/invoice/new" element={<InvoiceDetail />} />
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+            <Route path="/payment/cancel" element={<PaymentCancel />} />
             <Route path="/promotion" element={<Promotion />} />
           </Route>
         </Routes>

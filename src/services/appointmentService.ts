@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import type { Appointment, AppointmentFormData } from "@/types/appointment";
+import type { Appointment, AppointmentFormData, CreateAppointmentResponse } from "@/types/appointment";
 
 export const appointmentService = {
   search: async (params?: {
@@ -23,10 +23,11 @@ export const appointmentService = {
     return res.data;
   },
 
-  create: async (data: AppointmentFormData): Promise<Appointment> => {
-    const res = await api.post("/appointments", data, {
-      withCredentials: true,
-    });
+  // services/appointmentService.ts
+  create: async (
+    data: AppointmentFormData
+  ): Promise<CreateAppointmentResponse> => {
+    const res = await api.post("/appointments", data);
     return res.data;
   },
 
